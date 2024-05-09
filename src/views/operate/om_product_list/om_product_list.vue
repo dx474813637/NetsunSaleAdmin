@@ -16,6 +16,7 @@
 import router from "@/router/guard"
 import { reactive, ref, inject, onMounted, toRefs, watch, computed } from 'vue'
 const $api: any = inject('$api')
+import { genFileId, ElMessage, ElMessageBox } from 'element-plus'
 import { cateStore } from '@/stores/cate'
 import { userStore } from '@/stores/user'
 const user = userStore()
@@ -52,6 +53,24 @@ watch(
 		immediate: true
 	}
 )
+onMounted(() => { 
+    showInitMessage()
+})
+
+const showInitMessage = () => {
+	ElMessageBox.confirm(
+		'尊敬的伙伴您好！请在审核商品上架时，请仔细查看商详是否合法合规。以下部份列举商品或类请不要审核上架。【药品、保健品类、械字号类、妆特字类、大健康类、白酒、珠宝玉石类、带酒精及农药成份的商品、标有治疗性质的化妆品食品等】，后期根据实际情况逐步开放相关类目，谢谢您的配合！',
+		'提示',
+		{
+			confirmButtonText: '我已知晓',
+			showCancelButton: false, 
+			showClose: false,
+			closeOnPressEscape: false,
+			closeOnClickModal: false,
+			type: 'warning',
+		}
+	) 
+}
 function closeEvent() {
 	router.replace({ name: 'om_product_list' })
 }
