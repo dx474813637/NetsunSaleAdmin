@@ -121,6 +121,13 @@ export default {
 				else if(en == 'year') text = '年'
 				else if(en == 'day') text = '天' 
 				return text
+			},
+			bond_status(status: string | number | undefined) {
+				let text = status
+				if(status == 0) text = '待审核'
+				else if(status == 1) text = '通过'
+				else if(status == 2) text = '拒绝' 
+				return text
 			}
 		}
 	},

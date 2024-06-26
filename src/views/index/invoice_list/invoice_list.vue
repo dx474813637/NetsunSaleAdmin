@@ -10,10 +10,10 @@
 				</el-select>
 			</div>
 		</div> -->
-		<table-order-service :customParams="customParams" @detailEvent="detailEvent" @expressNoEvent="showExpressData"></table-order-service>
+		<table-order-invoice :customParams="customParams" @detailEvent="detailEvent" ></table-order-invoice>
 
 		<order-popup :show="dialogTableVisible" :id="detail_id" @setShow="setShow"></order-popup>
-		<express-popup :show="dialogTableVisible2" :id="no" @setShow="setShow2"></express-popup>
+		<!-- <express-popup :show="dialogTableVisible2" :id="no" @setShow="setShow2"></express-popup> -->
 	</div>
 </template>
   

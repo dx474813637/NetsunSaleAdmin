@@ -14,10 +14,10 @@
                         <el-text type="info">订单编号</el-text>
                         <el-text class="u-m-l-5 text-black" tag="b" >{{ row.id }}</el-text> 
                     </div>
-                    <div class="u-m-l-20">
+                    <div class="u-m-l-20 u-flex u-flex-items-baseline">
                         <el-text type="info">商家</el-text>
                         <el-link class="u-m-l-5 " tag="ins" type="primary" 
-                            @click="router.replace({name: 'shop_order_list', query: {login: row.sell_login}})">{{ row.sell_login }}</el-link> 
+                            @click="router.replace({name: 'shop_order_list', query: {login: row.sell_login}})">{{ row.info.company || row.sell_login }}</el-link> 
                     </div>
                     <div class="u-m-l-20">
                         <el-text type="info">创建时间</el-text>

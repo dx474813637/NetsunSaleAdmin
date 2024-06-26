@@ -20,6 +20,11 @@
 					</div>
 					<div class="u-flex-1 u-flex u-flex-center">
 						<el-statistic :precision="2" :value="initData.order_statement_num2" value-style="font-size: 30px; color: #fff" />
+						<el-button type="danger" text bg  class="u-flex u-flex-items-center u-m-l-10" v-if="initData.config.bc > 0" @click="dialogTableVisible2 = true">
+							<el-text style="color: #F5005A;" >{{ initData.config.bc_name }}</el-text>
+							<el-statistic :precision="2" :value="initData.config.bc" value-style="font-size: 18px; color: #F5005A" />
+							<el-icon size="16" class="u-m-l-5" color="#F5005A"><InfoFilled /></el-icon>
+						</el-button>
 					</div>
 				</div>
 			</el-col>
@@ -35,6 +40,7 @@
 				@detailEvent="detailEvent"></table-statement-list>
 
 			<product-popup :show="dialogTableVisible" :id="detail_id" @setShow="setShow"></product-popup>
+			<order-statement2-popup :show="dialogTableVisible2" :dataList="initData.config.bc_list" @setShow="setShow2"></order-statement2-popup>
 		</div>
 	</div>
 
@@ -67,6 +73,7 @@ const customParams = computed(() => {
 }) 
 const detail_id = ref('');
 const dialogTableVisible = ref(false);
+const dialogTableVisible2 = ref(false);
 function detailEvent(data) {
 	detail_id.value = data.id;
 	api.value = 'order_statement_list3'
@@ -87,6 +94,9 @@ async function getMoney(name) {
 }
 function setShow(v) {
 	dialogTableVisible.value = v
+}
+function setShow2(v) {
+	dialogTableVisible2.value = v
 }
 async function tixianBtn() {
     const res = await $api.order_statement_draw({...initData.value.config, loading: true}) 

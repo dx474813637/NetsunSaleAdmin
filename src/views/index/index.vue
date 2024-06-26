@@ -128,6 +128,20 @@ const addBtnList = [
 			name: 'out_pay_apply'
 		}
 	},
+	{
+		name: 'bond_list_admin',
+		title: '新增申请',
+		to: {
+			name: 'bond_add'
+		}
+	},
+	{
+		name: 'bond_list',
+		title: '保证金申请列表',
+		to: {
+			name: 'bond_list_admin'
+		}
+	},
 ]
 onMounted(async () => {
 	// cate.getWarehouseData() 

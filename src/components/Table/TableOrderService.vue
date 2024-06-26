@@ -42,7 +42,7 @@
         </el-table-column>
         <el-table-column label="快递单号" width="100"  >
             <template #default="{row}">
-                <el-text size="small">{{ row.express }}</el-text>
+                    <el-text type="primary" size="small" tag="a" style="cursor: pointer" @click="handleExpressClick(row)">{{ row.express }}</el-text> 
             </template> 
         </el-table-column>
         <!-- <el-table-column label="卖方" width="100"  >
@@ -230,7 +230,7 @@ const rules = {
 	// 	trigger: ['blur', 'change']
 	// }], 
 }
-const emit = defineEmits(["detailEvent"]);
+const emit = defineEmits(["detailEvent", "expressNoEvent"]);
 onMounted(async () => {
 	// getDeliveryListData()
     loading.value = true; 
@@ -253,6 +253,9 @@ watch(
     },
     {deep: true}
 )
+function handleExpressClick(data) {
+    emit('expressNoEvent', {no: data.express})
+}
 const getData = async () => { 
     const res = await $api.service_list({params: paramsObj.value, loading: false}) 
     if(res.code == 1) {

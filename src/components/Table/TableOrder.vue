@@ -1,146 +1,174 @@
 <template>
-    <el-table 
-        v-loading="loading" 
-        :data="list" 
-        style="width: 100%"   
-        :maxHeight="maxHeight"  
-        > 
-        <!-- <el-table-column prop="id" label="ID" width="70" align="center"  /> -->
-        <el-table-column label="商品信息" :width="isH5? '300' :'auto'"  >
-            <template #default="{row}">  
-                <div class="u-m-b-10 u-flex text-nowrap">
-                    <div>
-                        <el-text type="info">订单编号</el-text>
-                        <el-text class="u-m-l-5 text-black" tag="b" >{{ row.id }}</el-text> 
-                    </div>
-                    <div class="u-m-l-20">
-                        <el-text type="info">创建时间</el-text>
-                        <el-text class="u-m-l-5 " type="info" >{{ row.ctime }}</el-text> 
-                    </div>
-                </div>
-                <div class="u-flex u-flex-items-start u-m-t-5 u-m-b-5 " v-for="item in row.pid" :key="item.id">
-                    <div class="u-m-r-10" style="flex: 0 0 45px">
-                        <el-image class="u-radius-5" lazy style="width: 45px; height: 45px" :src="item.img" fit="fill" />
-                    </div> 
-                    <div class="u-flex-1">
-                        <el-link class="text-black" :underline="false" @click="emit('detailEvent', item.pid)" >
-                            {{ item.name }}*{{ item.num }}；
-                        </el-link> 
-                        <div class="u-flex u-flex-wrap u-flex-items-start">
-                            <el-tag class="u-m-r-5 u-m-t-5" type="primary" size="small">{{ item.goods_no }}</el-tag>
-                            <el-tag class="u-m-r-5 u-m-t-5" type="info" size="small">{{ item.recommend_remark }}</el-tag>
-                            <el-tag class="u-m-r-5 u-m-t-5" type="info" size="small">{{ item.delivery_delay_day }}天发货</el-tag>
-                            <el-tag class="u-m-r-5 u-m-t-5" type="info" size="small">{{ item.warehouse }}</el-tag>
+    <div>
+        <div>
+            <DiyForm
+                :ddata="diyFormData.data"
+                :form="diyFormData.form"
+                :name="diyFormData.name"
+                :flex="diyFormData.flex"
+                :align="diyFormData.align"
+                :nowDialog="diyFormData"
+                sureText="搜 索"
+                showClear
+                :isView="false"
+                :showCancel="false"  
+                @confirm="onDiyFormConfirm" 
+                @remove="onDiyFormRemove" 
+            ></DiyForm>
+        </div>
+        <el-tabs v-model="tabs_value" class="demo-tabs" v-show="!diyFormData.data.id">
+			<el-tab-pane  
+				v-for="item in tabs_list" 
+				:key="item.value" 
+				:label="item.label" 
+				:name="item.value"
+			></el-tab-pane>
+		</el-tabs>
+        <el-table 
+            v-loading="loading" 
+            :data="list" 
+            style="width: 100%"   
+            :maxHeight="maxHeight"  
+            > 
+            <!-- <el-table-column prop="id" label="ID" width="70" align="center"  /> -->
+            <el-table-column label="商品信息" :width="isH5? '300' :'auto'"  >
+                <template #default="{row}">  
+                    <div class="u-m-b-10 u-flex text-nowrap">
+                        <div>
+                            <el-text type="info">订单编号</el-text>
+                            <el-text class="u-m-l-5 text-black" tag="b" >{{ row.id }}</el-text> 
+                        </div>
+                        <div class="u-m-l-20">
+                            <el-text type="info">创建时间</el-text>
+                            <el-text class="u-m-l-5 " type="info" >{{ row.ctime }}</el-text> 
                         </div>
                     </div>
-                </div>
-                
-            </template>
-        </el-table-column>
-        <el-table-column prop="total_fee" label="总价" width="150" align="center"   >
-            <template #default="{row}">
-                <el-statistic :precision="2" :value="row.total_fee" value-style="font-size: 14px; color: #f00" />
-            </template>
-        </el-table-column>
-        <el-table-column label="订单信息" width="250"  >
-            <template #default="{row}">
-                <div v-if="row.express" class="u-m-b-5">
-                    <el-text type="success" >物流单号:{{ row.express }}</el-text>  
-                </div> 
-                <div>
-                    <el-text type="info" >{{ row.company }}</el-text>  
-                </div> 
-                <div v-if="row.info" class="u-m-t-5">
-                    <el-text type="error" >备注：{{ row.info }}</el-text>  
-                </div> 
-            </template>
-        </el-table-column>
-        
-        <el-table-column label="订单状态" width="120" >
-            <template #default="{row}">
-                <el-text type="danger" v-if="row.status == '6'">{{ $filters.order_status(row.status) }}</el-text>
-                <el-text type="success" v-else-if="row.status == '3' || row.status == '4'" >{{ $filters.order_status(row.status) }}</el-text>
-                <el-text type="warning" v-else >{{ $filters.order_status(row.status) }}</el-text>
-            </template> 
-        </el-table-column>  
-        <!-- <el-table-column prop="ctime" label="创建时间" width="200" /> -->
-        <el-table-column label="操作" width="120" align="center" > 
-            <template #default="{row}">
-                <div class="u-p-5" v-if="row.status == '1'">
-                    <el-popconfirm 
-						title="发货确认" 
-						@confirm="confirmSendBtn(row.id)"
-						confirm-button-text="确认"
-						cancel-button-text="取消"
-						>
-						<template #reference>
-							<el-button plain type="primary" size="small">发货</el-button>	 
-						</template>
-					</el-popconfirm>
-                </div>
-                <div class="u-p-5" v-if="row.status == '1'">
-                    <el-popconfirm 
-                        v-if="ziti == '1'"
-						title="自提确认" 
-						@confirm="selfPickupBtn(row.id)"
-						confirm-button-text="确认"
-						cancel-button-text="取消"
-						>
-						<template #reference>
-							<el-button plain type="primary" size="small">自提</el-button>	 
-						</template>
-					</el-popconfirm>
-                </div> 
-                <div class="u-p-5" v-if="(row.status == '1' || row.status == '8') && express == '1'">
-                <!-- <div class="u-p-5" > -->
-                    <el-popconfirm 
-                        v-if="ziti == '1'"
-						title="生成电子面单确认" 
-						@confirm="createExpressBtn(row.id)"
-						confirm-button-text="确认"
-						cancel-button-text="取消"
-						>
-						<template #reference>
-							<el-button plain type="primary" size="small">电子面单</el-button>	 
-						</template>
-					</el-popconfirm>
-                </div> 
-                <div class="u-p-5" v-if="row.status == '5'">
-                    <el-popconfirm 
-						title="同意退款确认" 
-						@confirm="checkRefundBtn({sh: 1, order_id: row.id})"
-						confirm-button-text="确认"
-						cancel-button-text="取消"
-						>
-						<template #reference>
-							<el-button plain type="primary" size="small">同意退款</el-button>	
-							<!-- <el-button plain type="primary" size="small">发货</el-button>	 -->
-						</template>
-					</el-popconfirm>
-                </div>
-                <div class="u-p-5" v-if="row.status == '5'">
-                    <el-popconfirm 
-						title="拒绝退款确认" 
-						@confirm="checkRefundBtn({sh: 0, order_id: row.id})"
-						confirm-button-text="确认"
-						cancel-button-text="取消"
-						>
-						<template #reference>
-							<el-button plain type="danger" size="small" >拒绝退款</el-button>	
-							<!-- <el-button plain type="primary" size="small">发货</el-button>	 -->
-						</template>
-					</el-popconfirm>
-                </div>
-               
-            </template>
+                    <div class="u-flex u-flex-items-start u-m-t-5 u-m-b-5 " v-for="item in row.pid" :key="item.id">
+                        <div class="u-m-r-10" style="flex: 0 0 45px">
+                            <el-image class="u-radius-5" lazy style="width: 45px; height: 45px" :src="item.img" fit="fill" />
+                        </div> 
+                        <div class="u-flex-1">
+                            <el-link class="text-black" :underline="false" @click="emit('detailEvent', item.pid)" >
+                                {{ item.name }}*{{ item.num }}；
+                            </el-link> 
+                            <div class="u-flex u-flex-wrap u-flex-items-start">
+                                <el-tag class="u-m-r-5 u-m-t-5" type="primary" size="small">{{ item.goods_no }}</el-tag>
+                                <el-tag class="u-m-r-5 u-m-t-5" type="info" size="small">{{ item.recommend_remark }}</el-tag>
+                                <el-tag class="u-m-r-5 u-m-t-5" type="info" size="small">{{ item.delivery_delay_day }}天发货</el-tag>
+                                <el-tag class="u-m-r-5 u-m-t-5" type="info" size="small">{{ item.warehouse }}</el-tag>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </template>
+            </el-table-column>
+            <el-table-column prop="total_fee" label="总价" width="150" align="center"   >
+                <template #default="{row}">
+                    <el-statistic :precision="2" :value="row.total_fee" value-style="font-size: 14px; color: #f00" />
+                </template>
+            </el-table-column>
+            <el-table-column label="订单信息" width="250"  >
+                <template #default="{row}">
+                    <div class="u-m-b-5">
+                        <el-text type="info" >更新时间：{{ row.uptime }}</el-text>  
+                    </div> 
+                    <div v-if="row.express" class="u-m-b-5">
+                        <el-text type="success" tag="a" style="cursor: pointer" @click="handleExpressClick(row)">物流单号：{{ row.express }}</el-text>   
+                    </div> 
+                    <div>
+                        <el-text type="info" >{{ row.company }}</el-text>  
+                    </div> 
+                    <div v-if="row.info" class="u-m-t-5">
+                        <el-text type="danger" >备注：{{ row.info }}</el-text>  
+                    </div> 
+                </template>
+            </el-table-column>
             
-        </el-table-column>
-        <template #empty>
-            <div class="u-flex u-flex-center u-p-t-20 u-p-b-20">
-                <el-empty description="无数据" />
-            </div>
-        </template>
-    </el-table>
+            <el-table-column label="订单状态" width="120" >
+                <template #default="{row}">
+                    <el-text type="danger" v-if="row.status == '6'">{{ $filters.order_status(row.status) }}</el-text>
+                    <el-text type="success" v-else-if="row.status == '3' || row.status == '4'" >{{ $filters.order_status(row.status) }}</el-text>
+                    <el-text type="warning" v-else >{{ $filters.order_status(row.status) }}</el-text>
+                </template> 
+            </el-table-column>  
+            <!-- <el-table-column prop="ctime" label="创建时间" width="200" /> -->
+            <el-table-column label="操作" width="120" align="center" > 
+                <template #default="{row}">
+                    <div class="u-p-5" v-if="row.status == '1'">
+                        <el-popconfirm 
+                            title="发货确认" 
+                            @confirm="confirmSendBtn(row.id)"
+                            confirm-button-text="确认"
+                            cancel-button-text="取消"
+                            >
+                            <template #reference>
+                                <el-button plain type="primary" size="small">发货</el-button>	 
+                            </template>
+                        </el-popconfirm>
+                    </div>
+                    <div class="u-p-5" v-if="row.status == '1'">
+                        <el-popconfirm 
+                            v-if="ziti == '1'"
+                            title="自提确认" 
+                            @confirm="selfPickupBtn(row.id)"
+                            confirm-button-text="确认"
+                            cancel-button-text="取消"
+                            >
+                            <template #reference>
+                                <el-button plain type="primary" size="small">自提</el-button>	 
+                            </template>
+                        </el-popconfirm>
+                    </div> 
+                    <div class="u-p-5" v-if="(row.status == '1' || row.status == '8') && express == '1'">
+                    <!-- <div class="u-p-5" > -->
+                        <el-popconfirm  
+                            title="生成电子面单确认" 
+                            @confirm="createExpressBtn(row.id)"
+                            confirm-button-text="确认"
+                            cancel-button-text="取消"
+                            >
+                            <template #reference>
+                                <el-button plain type="primary" size="small">电子面单</el-button>	 
+                            </template>
+                        </el-popconfirm>
+                    </div> 
+                    <div class="u-p-5" v-if="row.status == '5'">
+                        <el-popconfirm 
+                            title="同意退款确认" 
+                            @confirm="checkRefundBtn({sh: 1, order_id: row.id})"
+                            confirm-button-text="确认"
+                            cancel-button-text="取消"
+                            >
+                            <template #reference>
+                                <el-button plain type="primary" size="small">同意退款</el-button>	
+                                <!-- <el-button plain type="primary" size="small">发货</el-button>	 -->
+                            </template>
+                        </el-popconfirm>
+                    </div>
+                    <div class="u-p-5" v-if="row.status == '5'">
+                        <el-popconfirm 
+                            title="拒绝退款确认" 
+                            @confirm="checkRefundBtn({sh: 0, order_id: row.id})"
+                            confirm-button-text="确认"
+                            cancel-button-text="取消"
+                            >
+                            <template #reference>
+                                <el-button plain type="danger" size="small" >拒绝退款</el-button>	
+                                <!-- <el-button plain type="primary" size="small">发货</el-button>	 -->
+                            </template>
+                        </el-popconfirm>
+                    </div>
+                
+                </template>
+                
+            </el-table-column>
+            <template #empty>
+                <div class="u-flex u-flex-center u-p-t-20 u-p-b-20">
+                    <el-empty description="无数据" />
+                </div>
+            </template>
+        </el-table>
+    </div>
     <div class="list-page-box u-p-t-20 u-p-b-20">
         <el-pagination
             v-model:current-page="curP"
@@ -230,7 +258,7 @@
 </template>
 
 <script setup lang='ts'>
-import { reactive,ref,computed, inject, onMounted, watch } from 'vue'
+import { reactive,ref,computed, inject, onMounted, watch, toRefs } from 'vue'
 import router from "@/router/guard"  
 import { genFileId,ElNotification, ElMessage } from 'element-plus'
 import { useSettingsStore } from '@/stores/settings' 
@@ -271,6 +299,8 @@ const eExpressRef = ref()
 const paramsObj = computed(() => {
     return {
         p: curP.value,
+        type: tabs_value.value,
+        ...diyFormData.data,
         ...props.customParams
     }
 }) 
@@ -283,6 +313,18 @@ const eExpressForm = ref({
     wuliu: '', 
     weight: ''
 })
+const tabs_value = ref('');
+const tabs_list = ref([
+	{ label: '全部状态', value: '' },
+	{ label: '待付款', value: '0' },
+	{ label: '付款成功', value: '1' },
+	{ label: '待收货', value: '2' },
+	{ label: '已完成', value: '3' },
+	{ label: '评分完成', value: '4' },
+	{ label: '申请退款', value: '5' },
+	// { label: '拒绝退款', value: '6' },
+	{ label: '订单关闭', value: '7' }
+])
 const weightRequired = computed(() => {
     let wuliu = eExpressForm.value.wuliu;
     let jitu_id = express_list.value.filter(ele => ele.name == '极兔速递')[0]?.id || ''
@@ -303,7 +345,29 @@ const rules = {
 		trigger: ['blur', 'change']
 	}], 
 }
-const emit = defineEmits(["detailEvent"]);
+let diyFormData = reactive({
+    title: "title", 
+    name: "orderFilterForm",
+    name2: "orderFilterForm2",
+    show: true,
+    data: {
+        id: ''
+    },
+    flex: 'row',
+    align: 'start',
+    form: 
+    [
+        {
+            label: "订单ID",
+            el: "input",
+            prop: "id",
+            class: 'width-auto',
+            place: "订单ID", 
+            required: false
+        },  
+    ], 
+}) 
+const emit = defineEmits(["detailEvent", "expressNoEvent"]);
 onMounted(async () => {
 	getDeliveryListData()
     getMyExpressData()
@@ -318,8 +382,19 @@ const getDeliveryListData = async () => {
         deliveryList.value = res.list 
     }
 }
+// watch(
+//     () => diyFormData.data.id,
+//     (n) => {
+//         if(n) {
+//             tabs_value.value = ''
+//         }
+//     },
+//     {
+//         immediate: true,
+//     }
+// )
 watch(
-    () => [curP.value, props.customParams],
+    () => [curP.value, tabs_value.value, props.customParams],
     async (val) => {
         loading.value = true; 
         await getData()
@@ -327,6 +402,9 @@ watch(
     },
     {deep: true}
 )
+function handleExpressClick(data) {
+    emit('expressNoEvent', {no: data.express})
+}
 const getMyExpressData = async () => { 
     const res = await $api.my_express() 
     if(res.code == 1) {
@@ -415,6 +493,18 @@ function close() {
 function close2() {
     eExpressForm.value.wuliu = '' 
     eExpressRef.value.resetFields()
+}
+async function onDiyFormRemove() {
+    loading.value = true; 
+    await getData()
+    loading.value = false;
+}
+async function onDiyFormConfirm(e) { 
+    if(e.data.id) tabs_value.value = ''
+   
+    loading.value = true; 
+    await getData()
+    loading.value = false;
 }
 </script>
 <style lang='scss' scoped>

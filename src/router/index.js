@@ -32,6 +32,53 @@ const routes = [
                 component: () => import('@/views/index/product_list/product_list.vue'),
             },
             {
+                path: 'bond_list',
+                name: 'bond_list',
+                meta: {
+                    title: '保证金账户',  
+                    role: [1, 2, 3], 
+                },
+                component: () => import('@/views/index/bond_list/bond_list.vue'),
+            },
+            {
+                path: 'bond_list_admin',
+                name: 'bond_list_admin',
+                meta: {
+                    title: '保证金申请列表',  
+                    role: [1, 2, 3], 
+                },
+                component: () => import('@/views/index/bond_list_admin/bond_list_admin.vue'),
+            },
+            {
+                path: 'bond_add',
+                name: 'bond_add',
+                meta: {
+                    title: '新增保证金申请',  
+                    role: [1, 2, 3], 
+                },
+                props:true, 
+                component: () => import('@/views/index/bond_edit/bond_edit.vue'),
+            },
+            {
+                path: 'bond_detail/:id',
+                name: 'bond_detail',
+                meta: {
+                    title: '保证金详情',  
+                    role: [1, 2, 3], 
+                },
+                props:true, 
+                component: () => import('@/views/index/bond_detail/bond_detail.vue'),
+            },
+            {
+                path: 'invoice_list',
+                name: 'invoice_list',
+                meta: {
+                    title: '客户开票申请',  
+                    role: [1, 2, 3], 
+                },
+                component: () => import('@/views/index/invoice_list/invoice_list.vue'),
+            },
+            {
                 path: 'express_list',
                 name: 'express_list',
                 meta: {

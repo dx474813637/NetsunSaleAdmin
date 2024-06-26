@@ -122,6 +122,15 @@
 				"icon": "", 
 				"role": "[1, 2, 3]",
 				"url": "https://www.sunmaxx.cn/User/down_order2"
+			},
+			{
+				"label": "客户开票申请",
+				"icon": "", 
+				"index": "invoice_list",
+				"role": "[1, 2, 3]", 
+				"route": {
+					"name": "invoice_list"
+				}  
 			}
 		]
 	}, 
@@ -188,6 +197,15 @@
 				"icon": "",
 				"role": "[1, 2, 3]", 
 				"url": "https://www.sunmaxx.cn/User/down_statement" 
+			},
+			{
+				"label": "保证金账户", 
+				"icon": "",
+				"index": "bond_list",
+				"role": "[1, 2, 3]", 
+				"route": {
+					"name": "bond_list"
+				}
 			}
 		]
 	}, 

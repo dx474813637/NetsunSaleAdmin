@@ -112,3 +112,23 @@ export const pay_info = (data) => axios.get('Userapi/pay_info', data)
 
 // statement_list 结算申请列表 参数p
 export const statement_list = (data) => axios.get('Userapi/statement_list', data)
+
+// wuliu 查询物流信息 参数no快递单号 mobile手机（可以空）
+// 在订单那里可以把手机传一下，售后那里可以不传，售后订单的手机号不是仓库的手机。
+export const wuliu = (data) => axios.get('Userapi/wuliu', data)
+
+// deposit 保证金接口  参数p cate=1入 2出 空或0全部 order订单id
+// 返回的amount保证金总金额
+export const deposit = (data) => axios.get('Userapi/deposit', data)
+
+// invoice_list 申请发票列表 参数p
+export const invoice_list = (data) => axios.get('Userapi/invoice_list', data)
+// fapiao 参数id 申请发票列表的id  改变申请状态
+export const fapiao = (data) => axios.get('Userapi/fapiao', data)
+
+// add_deposit 增/退保证金接口 参数amount 金额单位元，可以小数点。必填  cate=1增加 2退还  order 单号或流水号 在cate=1时必填。
+export const add_deposit = (data) => axios.get('Userapi/add_deposit', data)
+// deposit2 保证金申请列表 参数p cate order
+export const deposit2 = (data) => axios.get('Userapi/deposit2', data)
+// deposit_detail 保证金申请详情 参数id
+export const deposit_detail = (data) => axios.get('Userapi/deposit_detail', data)
