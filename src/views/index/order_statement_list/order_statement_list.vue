@@ -16,7 +16,7 @@
 				<div class="u-radius-8 card u-flex-column u-flex-items-center u-flex-center u-p-10 box-border">
 					<div class="card-header u-flex u-flex-between u-flex-items-center">
 						<el-text tag="b" class="u-font-16 text-white">可提现金额</el-text>
-						<el-button type="danger" plain size="small" v-if="initData.order_statement_num2 > 0" @click="tixianBtn">提现</el-button>
+						<el-button type="danger" plain size="small" v-if="initData.order_statement_num2 > 0" :loading="btnLoading" :disabled="btnLoading" @click="tixianBtn">提现</el-button>
 					</div>
 					<div class="u-flex-1 u-flex u-flex-center">
 						<el-statistic :precision="2" :value="initData.order_statement_num2" value-style="font-size: 30px; color: #fff" />
@@ -72,8 +72,9 @@ const customParams = computed(() => {
 	}
 }) 
 const detail_id = ref('');
-const dialogTableVisible = ref(false);
+const dialogTableVisible = ref(false); 
 const dialogTableVisible2 = ref(false);
+const btnLoading = ref(false);
 function detailEvent(data) {
 	detail_id.value = data.id;
 	api.value = 'order_statement_list3'
@@ -99,10 +100,18 @@ function setShow2(v) {
 	dialogTableVisible2.value = v
 }
 async function tixianBtn() {
-    const res = await $api.order_statement_draw({...initData.value.config, loading: true}) 
-    if(res.code == 1) {
-		ElMessage.success(res.msg)
-		await getInitData()
+	if(btnLoading.value) return
+	btnLoading.value = true
+	try {
+		const res = await $api.order_statement_draw({...initData.value.config, loading: true}) 
+		btnLoading.value = false
+		if(res.code == 1) {
+			ElMessage.success(res.msg)
+			await getInitData()
+		}
+	} catch (error) {
+		btnLoading.value = false
+		
 	}
 
 }

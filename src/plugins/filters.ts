@@ -80,8 +80,8 @@ export default {
 				else if(status == '2') text = '待收货' 
 				else if(status == '3') text = '订单完成' 
 				else if(status == '4') text = '评分完成' 
-				else if(status == '5') text = '申请退款' 
-				else if(status == '6') text = '拒绝退款' 
+				else if(status == '5') text = '申请售后' 
+				else if(status == '6') text = '拒绝售后' 
 				else if(status == '7') text = '订单关闭' 
 				else if(status == '8') text = '发货中'  
 				return text

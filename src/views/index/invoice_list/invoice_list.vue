@@ -27,8 +27,8 @@ const tabs_list = ref([
 	{ label: '待收货', value: '2' },
 	{ label: '已完成', value: '3' },
 	{ label: '评分完成', value: '4' },
-	{ label: '申请退款', value: '5' },
-	// { label: '拒绝退款', value: '6' },
+	{ label: '申请售后', value: '5' },
+	// { label: '拒绝售后', value: '6' },
 	{ label: '订单关闭', value: '7' }
 ])
 const tabs_list2 = ref([

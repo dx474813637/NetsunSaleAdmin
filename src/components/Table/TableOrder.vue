@@ -147,13 +147,13 @@
                     </div>
                     <div class="u-p-5" v-if="row.status == '5'">
                         <el-popconfirm 
-                            title="拒绝退款确认" 
+                            title="拒绝售后确认" 
                             @confirm="checkRefundBtn({sh: 0, order_id: row.id})"
                             confirm-button-text="确认"
                             cancel-button-text="取消"
                             >
                             <template #reference>
-                                <el-button plain type="danger" size="small" >拒绝退款</el-button>	
+                                <el-button plain type="danger" size="small" >拒绝售后</el-button>	
                                 <!-- <el-button plain type="primary" size="small">发货</el-button>	 -->
                             </template>
                         </el-popconfirm>
@@ -321,8 +321,8 @@ const tabs_list = ref([
 	{ label: '待收货', value: '2' },
 	{ label: '已完成', value: '3' },
 	{ label: '评分完成', value: '4' },
-	{ label: '申请退款', value: '5' },
-	// { label: '拒绝退款', value: '6' },
+	{ label: '申请售后', value: '5' },
+	// { label: '拒绝售后', value: '6' },
 	{ label: '订单关闭', value: '7' }
 ])
 const weightRequired = computed(() => {
