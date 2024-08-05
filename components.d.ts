@@ -9,6 +9,8 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AddVoucherPopup: typeof import('./src/components/Popup/addVoucherPopup.vue')['default']
+    copy: typeof import('./src/components/Popup/expressPopup copy.vue')['default']
     DiyForm: typeof import('./src/components/DiyForm/DiyForm.vue')['default']
     DiyFormItems: typeof import('./src/components/DiyForm/DiyFormItems.vue')['default']
     Editor: typeof import('./src/components/Editor/Editor.vue')['default']
@@ -110,10 +112,12 @@ declare module '@vue/runtime-core' {
     TableStatementList: typeof import('./src/components/Table/TableStatementList.vue')['default']
     TableStatementListBc: typeof import('./src/components/Table/TableStatementListBc.vue')['default']
     TableSubAcc: typeof import('./src/components/Table/TableSubAcc.vue')['default']
+    TableVouchersList: typeof import('./src/components/Table/TableVouchersList.vue')['default']
     TableWhiteSeller: typeof import('./src/components/Table/TableWhiteSeller.vue')['default']
     TableWorkers: typeof import('./src/components/Table/TableWorkers.vue')['default']
     TableWorkers2: typeof import('./src/components/Table/TableWorkers2.vue')['default']
     UploadPopup: typeof import('./src/components/Popup/uploadPopup.vue')['default']
+    VoucherSendPopup: typeof import('./src/components/Popup/voucherSendPopup.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

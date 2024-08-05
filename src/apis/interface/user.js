@@ -132,3 +132,18 @@ export const add_deposit = (data) => axios.get('Userapi/add_deposit', data)
 export const deposit2 = (data) => axios.get('Userapi/deposit2', data)
 // deposit_detail 保证金申请详情 参数id
 export const deposit_detail = (data) => axios.get('Userapi/deposit_detail', data)
+
+// vouchers 福利券列表 参数p  状态说明：zt=0未使用 1已发送（已经发送过短信） 2已充值
+export const vouchers = (data) => axios.get('Userapi/vouchers', data)
+// use_vouchers 福利券使用列表 参数p
+export const use_vouchers = (data) => axios.get('Userapi/use_vouchers', data)
+// add_vouchers_up 生成福利券 参数 num数量 price单张福利券金额 tel手机（多个手机用英文逗号隔开）。
+// 输入手机后，数量输入框无效，会根据手机数生成多个福利券并短信发送到手机。
+// 允许只输入数量和金额，在这情况下只会生成福利券，不会发送短信。
+export const add_vouchers_up = (data, config) => axios.post('Userapi/add_vouchers_up', data, config)  
+// send_vouchers 短信发送福利券 参数id 福利券的id phone输入的手机号 未使用的福利券才能发送短信。
+export const send_vouchers = (data) => axios.get('Userapi/send_vouchers', data)
+// down_vouchers_export 未使用福利券下载 这个不知道接口能不能用的，这个直接返回Excel文档数据的，不是返回一个下载地址。
+export const down_vouchers_export = (data) => axios.get('Userapi/down_vouchers_export', data)
+// vouchers_amount 福利券额度
+export const vouchers_amount = (data) => axios.get('Userapi/vouchers_amount', data)

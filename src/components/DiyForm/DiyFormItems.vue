@@ -13,7 +13,7 @@
   
       <el-input
         v-else-if="el.el == 'input'"
-        :placeholder="`输入${el.label || el.place}`"
+        :placeholder="`输入${el.place || el.label}`"
         v-model="data[el.prop]"
         :maxlength="el.max || 1000"
         :type="el.type || 'text'"
@@ -33,7 +33,7 @@
         v-else-if="el.el == 'text-area'"
         type="textarea"
         autosize
-        :placeholder="`输入${el.label || el.place}`"
+        :placeholder="`输入${el.place || el.label}`"
         v-model="data[el.prop]"
         :maxlength="el.max || 1000"
         show-word-limit
@@ -172,7 +172,7 @@
           />
           <span>{{ el.props.label == "self" ? oitem : oitem[el.props.label] }}</span>
         </el-option>
-      </el-select>
+      </el-select> 
       <p v-if="el.fn">{{ el.fn && el.fn(data[el.prop],data) }}</p>
     </div>
   </template>
@@ -223,5 +223,12 @@
   };
   </script>
   <style scoped lang="scss">
+    .els-container {
+      width: 100%;
+      .el-input,
+      .el-select {
+        flex: 1
+      }
+    }
   </style>
   

@@ -306,6 +306,33 @@ const routes = [
                 },
                 component: () => import('@/views/index/order_statement_list/order_statement_list.vue'),
             },
+            {
+                path: 'vouchers',
+                name: 'vouchers',
+                meta: {
+                    role: [1, 2, 3]
+                },
+                redirect: () => ({name: 'vouchers_list'}),
+                component: () => import('@/views/index/vouchers/index.vue'),
+                children: [
+                    {
+                        path: 'list',
+                        name: 'vouchers_list',
+                        meta: {
+                            role: [1, 2, 3]
+                        },
+                        component: () => import('@/views/index/vouchers/list/list.vue'),
+                    },
+                    {
+                        path: 'list_used',
+                        name: 'vouchers_list_used',
+                        meta: {
+                            role: [1, 2, 3]
+                        },
+                        component: () => import('@/views/index/vouchers/list_used/list_used.vue'),
+                    },
+                ]
+            },
         ]
     },
     {

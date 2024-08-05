@@ -32,7 +32,7 @@
                     :data="ddata"
                     @change="$emit('change',$event)"
                     @point-handle="$emit('point-handle',$event)"
-                  />
+                  />  
                 </slot>
               </el-form-item>
             </div>
@@ -43,21 +43,28 @@
                 :prop="i.prop"
                 :rules="getRules(i)"
                 :style="i.hidden && { display: 'none', margin: 0 }"
-              >
-                <elsContainer
-                  :el="i"
-                  :isView="isView"
-                  :data="ddata"
-                  @change="$emit('change',$event)"
-                  @point-handle="$emit('point-handle',$event)"
-                />
+              > 
+                <div class="u-flex" style="width: 100%;">
+                  <elsContainer 
+                    :el="i"
+                    :isView="isView"
+                    :data="ddata"
+                    @change="$emit('change',$event)"
+                    @point-handle="$emit('point-handle',$event)"
+                  /> 
+                  <div class="u-m-l-10" v-if="i.isRemoveBtn">
+                    <el-button type="danger" plain @click="itemsRemoveBtn(i)">去除</el-button>
+                  </div>
+                </div>
+                
               </el-form-item>
             </div>
           </slot>
           <slot name="item-handle" :pItem="i"></slot>
         </div>
         <div class="handle" :class="[flex]">
-          <el-button plain type="danger" v-if="showClear" @click.stop="removeBtn">清 除</el-button>
+          <slot name="btns" ></slot>
+          <el-button plain type="danger" v-if="showClear" @click.stop="removeBtn">{{ removeText }}</el-button>
           <el-button v-if="showCancel" plain @click="$emit('cancel')">
             {{
             cancelText
@@ -67,6 +74,8 @@
             v-if="showSure"
             plain
             type="primary"
+            :disabled="confirmBtnDisabled"
+            :loading="confirmBtnLoading"
             @click="
             onCheck(
               refName == 'flowDigFormRef'
@@ -93,6 +102,8 @@
     "confirm",
     "change",
     "check",
+    "remove",
+    "itemsRemove"
   ]);
   const props = defineProps({
     sureText: {
@@ -103,9 +114,21 @@
       type: String,
       default: "取 消"
     },
+    removeText: {
+      type: String,
+      default: "重 置"
+    },
     showSure: {
       type: Boolean,
       default: true
+    },
+    confirmBtnDisabled: {
+      type: Boolean,
+      default: false
+    },
+    confirmBtnLoading: {
+      type: Boolean,
+      default: false
     },
     showCancel: {
       type: Boolean,
@@ -159,7 +182,7 @@
   };
   
   const getRules = e => {
-    let { el, hidden, els, required, label, place } = e;
+    let { el, hidden, els, required, label, place, validator } = e;
     let message = `请${el && el.includes("input") ? "输入" : "选择"}${label ||
       place ||
       "内容"}`;
@@ -176,13 +199,26 @@
     } else {
       nowrequired = required;
     }
-    return [
-      {
-        required:nowrequired,
-        message,
-        trigger: ["blur", "change"]
-      }
-    ];
+    let rules 
+    if(nowrequired && validator) {
+      rules = [
+        {
+          validator, 
+          trigger: ["blur", "change"]
+        }
+      ];
+    }
+    else {
+      rules = [
+        {
+          required:nowrequired,
+          message,
+          trigger: ["blur", "change"]
+        }
+      ];
+    }
+    
+    return rules
   };
   const onCheck = (formRef, fn) => {
       if (!formRef) return;
@@ -199,6 +235,9 @@
   const removeBtn = () => {
     FormRef.value.resetFields()
     emits('remove')
+  }
+  function itemsRemoveBtn(data) {
+    emits('itemsRemove', {data})
   }
   </script>
   <style scoped lang="scss">
@@ -236,21 +275,21 @@
     }
     .handle {
       width: 100% ;//!important;
-	  &.row {
-		width: auto;
-      	flex: 0 0 auto;
-	  }
+      &.row {
+      width: auto;
+          flex: 0 0 auto;
+      }
     }
     > div {
       // flex: 0 0 50%;
       flex: 0 0 100%;
       // margin-top: 10px;
       align-items: center;
-	  &.width-auto {
-			flex: 0 0 auto;
-			width: auto;
-			padding-right: 10px; 
-		}
+      &.width-auto {
+        flex: 0 0 auto;
+        width: auto;
+        padding-right: 10px; 
+      }
       // background: #f00;
       > h4 {
         margin-bottom: 10px;
