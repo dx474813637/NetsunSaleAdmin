@@ -61,6 +61,8 @@ export const userStore = defineStore('user', {
 				},
 			],
 			subAccount: [],
+			showMenus: 0,
+			showVouchersMenus: 0
 		};
 	},
 	getters: {
@@ -83,6 +85,8 @@ export const userStore = defineStore('user', {
 			const res = await apis.getAccRole({ loading: needLoading });
 			if (res.code == 1) {
 				this.role = res.role
+				this.showMenus = res.role_vouchers
+				this.showVouchersMenus = res.role_vouchers2
 			}
 		},
 		async getSubAccData(needLoading = false) {

@@ -127,11 +127,11 @@ const $api = inject('$api')
 const props = defineProps({
 	id: {
 		type: String,
-        detail: ''
+        default: ''
 	},
     show: {
         type: Boolean,
-        detail: false
+        default: false
     }
 });     
 const list = ref({})

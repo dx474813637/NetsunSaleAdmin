@@ -203,6 +203,7 @@
     if(nowrequired && validator) {
       rules = [
         {
+          required:nowrequired,
           validator, 
           trigger: ["blur", "change"]
         }

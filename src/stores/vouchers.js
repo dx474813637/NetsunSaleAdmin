@@ -16,7 +16,8 @@ export const useVouchersStore = defineStore('vouchers', {
 	state: () => {
 		return {
             vouchers_amount: 0, 
-            vouchers_amount_loading: false
+            vouchers_amount_loading: false,
+			page_update: false
 		};
 	},  
 	actions: {  

@@ -91,78 +91,7 @@
                     <el-text type="success" v-else-if="row.status == '3' || row.status == '4'" >{{ $filters.order_status(row.status) }}</el-text>
                     <el-text type="warning" v-else >{{ $filters.order_status(row.status) }}</el-text>
                 </template> 
-            </el-table-column>  
-            <!-- <el-table-column prop="ctime" label="创建时间" width="200" /> -->
-            <el-table-column label="操作" width="120" align="center" > 
-                <template #default="{row}">
-                    <div class="u-p-5" v-if="row.status == '1'">
-                        <el-popconfirm 
-                            title="发货确认" 
-                            @confirm="confirmSendBtn(row.id)"
-                            confirm-button-text="确认"
-                            cancel-button-text="取消"
-                            >
-                            <template #reference>
-                                <el-button plain type="primary" size="small">发货</el-button>	 
-                            </template>
-                        </el-popconfirm>
-                    </div>
-                    <div class="u-p-5" v-if="row.status == '1'">
-                        <el-popconfirm 
-                            v-if="ziti == '1'"
-                            title="自提确认" 
-                            @confirm="selfPickupBtn(row.id)"
-                            confirm-button-text="确认"
-                            cancel-button-text="取消"
-                            >
-                            <template #reference>
-                                <el-button plain type="primary" size="small">自提</el-button>	 
-                            </template>
-                        </el-popconfirm>
-                    </div> 
-                    <div class="u-p-5" v-if="(row.status == '1' || row.status == '8') && express == '1'">
-                    <!-- <div class="u-p-5" > -->
-                        <el-popconfirm  
-                            title="生成电子面单确认" 
-                            @confirm="createExpressBtn(row.id)"
-                            confirm-button-text="确认"
-                            cancel-button-text="取消"
-                            >
-                            <template #reference>
-                                <el-button plain type="primary" size="small">电子面单</el-button>	 
-                            </template>
-                        </el-popconfirm>
-                    </div> 
-                    <div class="u-p-5" v-if="row.status == '5'">
-                        <el-popconfirm 
-                            title="同意退款确认" 
-                            @confirm="checkRefundBtn({sh: 1, order_id: row.id})"
-                            confirm-button-text="确认"
-                            cancel-button-text="取消"
-                            >
-                            <template #reference>
-                                <el-button plain type="primary" size="small">同意退款</el-button>	
-                                <!-- <el-button plain type="primary" size="small">发货</el-button>	 -->
-                            </template>
-                        </el-popconfirm>
-                    </div>
-                    <div class="u-p-5" v-if="row.status == '5'">
-                        <el-popconfirm 
-                            title="拒绝售后确认" 
-                            @confirm="checkRefundBtn({sh: 0, order_id: row.id})"
-                            confirm-button-text="确认"
-                            cancel-button-text="取消"
-                            >
-                            <template #reference>
-                                <el-button plain type="danger" size="small" >拒绝售后</el-button>	
-                                <!-- <el-button plain type="primary" size="small">发货</el-button>	 -->
-                            </template>
-                        </el-popconfirm>
-                    </div>
-                
-                </template>
-                
-            </el-table-column>
+            </el-table-column>   
             <template #empty>
                 <div class="u-flex u-flex-center u-p-t-20 u-p-b-20">
                     <el-empty description="无数据" />
@@ -181,81 +110,7 @@
         >
             <span class="u-p-l-10">共 {{ total }} 条数据</span>
         </el-pagination>
-    </div> 
-    <el-dialog
-        v-model="dialogVisible"
-        title="输发货表单"
-        width="30%" 
-        @close="close"
-    >
-        <!-- <div class="u-flex u-flex-items-center">
-            <el-input v-model="express" placeholder="输入发货的快递单号" />
-        </div> -->
-        <el-form :model="expressForm" :rules="rules" ref="expressRef" label-width="100px">
-			<el-form-item label="当前订单号" >
-				<el-input v-model="curRowId" readonly ></el-input>
-			</el-form-item>
-			<el-form-item label="快递公司" prop="delivery_id">
-				<el-select v-model="expressForm.delivery_id" placeholder="快递公司" style="width: 100%;" >
-                    <el-option
-                        v-for="item in deliveryList"
-                        :key="item.id"
-                        :label="item.delivery_name"
-                        :value="item.delivery_id"
-                    />
-                </el-select>
-			</el-form-item>
-			<el-form-item label="快递单号" prop="express">
-				<el-input v-model="expressForm.express" placeholder="输入发货的快递单号"></el-input>
-			</el-form-item>
-        </el-form>
-        <template #footer>
-        <span class="dialog-footer">
-            <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="submitForm(expressRef)">提交表单</el-button>
-        </span>
-        </template>
-    </el-dialog>
-    <el-dialog
-        v-model="dialogVisible2"
-        title="电子面单-选择物流"
-        :width="isH5? '90vw' :'800px'" 
-        @close="close2" 
-        :close-on-click-modal="false"
-        draggable
-    >
-        <!-- <div class="u-flex u-flex-items-center">
-            <el-input v-model="express" placeholder="输入发货的快递单号" />
-        </div> -->
-        <el-form :model="eExpressForm" :rules="rules" ref="eExpressRef" label-width="100px" label-position="top">
-			<el-form-item label="当前订单号" >
-				<el-input v-model="curRowId" disabled ></el-input>
-			</el-form-item>
-			<el-form-item label="物流" prop="wuliu">
-				<el-select v-model="eExpressForm.wuliu" placeholder="物流" style="width: 100%;" >
-                    <el-option
-                        v-for="item in express_list"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id"
-                    />
-                </el-select>
-			</el-form-item> 
-			<el-form-item label="物品重量/KG" prop="weight"  :rules="{
-                    required: weightRequired,
-                    message: `物品重量不能为空`,
-                    trigger: ['blur', 'change'],
-                }">
-				<el-input v-model="eExpressForm.weight" clearable placeholder="物品重量(单位：千克)" />
-			</el-form-item> 
-        </el-form>
-        <template #footer>
-        <span class="dialog-footer">
-            <el-button @click="dialogVisible2 = false">取消</el-button>
-            <el-button type="primary" @click="submitForm2(eExpressRef)">提交表单</el-button>
-        </span>
-        </template>
-    </el-dialog>
+    </div>   
 </template>
 
 <script setup lang='ts'>
@@ -285,7 +140,7 @@ const props = defineProps({
 }); 
 const dialogVisible = ref(false)
 const dialogVisible2 = ref(false)
-const $api = inject('$api')
+const $api:any = inject('$api')
 const list = ref([])
 const express_list = ref([])
 const loading = ref(false)
@@ -414,7 +269,7 @@ const getMyExpressData = async () => {
     
 }
 const getData = async () => { 
-    const res = await $api.order_list({params: paramsObj.value, loading: false}) 
+    const res = await $api.order_list1({params: paramsObj.value, loading: false}) 
     if(res.code == 1) {
         list.value = res.list
         total.value = +res.total 

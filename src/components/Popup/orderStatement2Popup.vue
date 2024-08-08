@@ -18,15 +18,15 @@ const $api = inject('$api')
 const props = defineProps({
 	id: {
 		type: String,
-        detail: ''
+        default: ''
 	},
     show: {
         type: Boolean,
-        detail: false
+        default: false
     },
     dataList: {
         type: Array,
-        detail: () => []
+        default: () => []
     }
 });      
 const emit = defineEmits(["setShow"]);

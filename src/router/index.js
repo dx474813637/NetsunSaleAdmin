@@ -306,33 +306,6 @@ const routes = [
                 },
                 component: () => import('@/views/index/order_statement_list/order_statement_list.vue'),
             },
-            {
-                path: 'vouchers',
-                name: 'vouchers',
-                meta: {
-                    role: [1, 2, 3]
-                },
-                redirect: () => ({name: 'vouchers_list'}),
-                component: () => import('@/views/index/vouchers/index.vue'),
-                children: [
-                    {
-                        path: 'list',
-                        name: 'vouchers_list',
-                        meta: {
-                            role: [1, 2, 3]
-                        },
-                        component: () => import('@/views/index/vouchers/list/list.vue'),
-                    },
-                    {
-                        path: 'list_used',
-                        name: 'vouchers_list_used',
-                        meta: {
-                            role: [1, 2, 3]
-                        },
-                        component: () => import('@/views/index/vouchers/list_used/list_used.vue'),
-                    },
-                ]
-            },
         ]
     },
     {
@@ -397,6 +370,53 @@ const routes = [
                     role: [2],
                 }, 
                 component: () => import('@/views/operate/om_product_list/om_product_list.vue'),
+            },
+        ]
+    },
+    {
+        path: '/vouchers',
+        name: 'vouchers',
+        meta: {
+            role: [1, 2, 3]
+        },
+        redirect: () => ({name: 'vouchers_list'}),
+        component: () => import('@/views/vouchers/index.vue'),
+        children: [
+            {
+                path: 'list',
+                name: 'vouchers_list',
+                meta: {
+                    title: '福利券管理',  
+                    role: [1, 2, 3]
+                },
+                component: () => import('@/views/vouchers/list/list.vue'),
+            },
+            {
+                path: 'list_used',
+                name: 'vouchers_list_used',
+                meta: {
+                    title: '福利券管理',  
+                    role: [1, 2, 3]
+                },
+                component: () => import('@/views/vouchers/list_used/list_used.vue'),
+            },
+            {
+                path: 'order_list',
+                name: 'vouchers_order_list',
+                meta: {
+                    title: '订单列表',  
+                    role: [1, 2, 3]
+                },
+                component: () => import('@/views/vouchers/order_list/order_list.vue'),
+            }, 
+            {
+                path: 'product_zone',
+                name: 'vouchers_product_zone',
+                meta: {
+                    title: '福利券商品列表',  
+                    role: [1, 2, 3]
+                },
+                component: () => import('@/views/vouchers/product_zone/product_zone.vue'),
             },
         ]
     },

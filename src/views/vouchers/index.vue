@@ -1,0 +1,250 @@
+<!--  -->
+<template>
+	<el-affix @change="headerAffixChange">
+		<header-user :customStyle="headerAffixStatus? {
+			backgroundImage: 'radial-gradient(transparent 1px, #fff 1px)',
+			boxShadow: '0 5px 5px rgba(90,90,90,.08)'
+		} :  {
+			backgroundImage: 'radial-gradient(transparent 1px, #F1F6FD 1px)',
+			boxShadow: 'none'
+		}"
+        simple
+        ></header-user>
+	</el-affix>
+	
+	<el-drawer v-model="menusShow" :with-header="false" append-to-body value="ltr" size="80vw">
+		<menus-index class="menus-h5"></menus-index>
+	</el-drawer>
+	<div class="user-wrap " :class="{fx_mode: routerName == 'fx_helper'}">
+		<div class="home-w u-flex u-flex-items-start u-p-t-15 box-border">
+            <div class="item item-menus u-m-r-15" >  
+				<el-affix class="menus-index-affix" :offset="76">
+					<div class="u-p-5 u-radius-8 bg-white menus-w box-border">
+                        <template v-if="showMenus == '1'">
+                            <menus-index-voucher></menus-index-voucher>
+                        </template>
+						<img v-else style="width: 100%; height: auto;" :src="`https://www.sunmaxx.cn/Public/fulizq/flad.png?time=${new Date().getTime()}`" />
+					</div> 
+				</el-affix>
+				
+			</div>
+			
+			
+			<div class="item item-main u-radius-8 u-flex-column u-flex-items-start"> 
+				<el-page-header class="u-p-10 u-p-t-20 box-border" style="width: 100%;"  title="后退"  @back="onBack" v-if="showMenus == '1'"> 
+					<template #icon >
+						<el-icon class="text-base">
+							<i-ep-ArrowLeft></i-ep-ArrowLeft>
+						</el-icon>
+					</template>
+					<template #content>
+						<el-text class="u-font-16 text-black" tag="b"> {{ useSettings.title }} </el-text>
+						<el-text class="u-font-14 u-m-l-20" type="info" v-if="!isH5"> {{ subTitle }} </el-text>
+					</template>
+					<template #extra>
+						<el-button 
+							type="primary" 
+							plain 
+							v-if="btnActive" 
+							@click="router.push({name: btnActive.to.name})"
+							>{{ btnActive.title }}</el-button>
+					</template>
+					<!-- <div class="mt-4 text-sm font-bold">
+						Your additional content can be added with default slot, You may put as
+						many content as you want here.
+					</div> -->
+				</el-page-header>
+                <router-view class="u-flex-1" style="width: 100%;" :key="routerPath" ></router-view>
+            </div>
+           
+        </div>
+    </div>
+   
+	<div class="menus-btn-h5">
+		<el-button 
+			type="primary" 
+			class="u-font-25" 
+			size="large" 
+			icon="Operation" 
+			circle 
+			@click="menusShow = !menusShow"
+		/>
+	</div>
+
+</template>
+
+<script setup lang="ts">
+import { ref, watch, computed, onMounted, toRefs } from "vue";
+import router from "@/router/guard"
+import { useSettingsStore } from '@/stores/settings'
+import { cateStore } from '@/stores/cate'
+import { userStore } from '@/stores/user'
+const useSettings = useSettingsStore()
+const cate = cateStore()
+const { menuListAll, menuList } = toRefs(cate)
+import { useVouchersStore } from '@/stores/vouchers'
+const vouchers = useVouchersStore()
+const { vouchers_amount, vouchers_amount_loading, page_update } = toRefs(vouchers)
+const user = userStore()
+const menusShow = ref(false)
+const { cpy_info, showMenus } = toRefs(user)
+const { webview, isH5 } = toRefs(useSettings)
+const addVoucherShow = ref(false); 
+
+const tabs_list = ref([
+    { label: '福利券列表', value: 'vouchers_list' },
+    { label: '福利券使用列表', value: 'vouchers_list_used' },
+])
+const routerPath = computed(() => {
+    return router.currentRoute.value.fullPath
+})
+const routerName = computed(() => {
+    return router.currentRoute.value.name
+})
+const $api: any = inject('$api')
+const loading = ref(false)
+const downloadLoading = ref(false) 
+const tab_active = ref('vouchers_list')
+const headerAffixStatus = ref(false)
+
+const menuActive = ref('vouchers_list')
+watch(
+	() => router.currentRoute.value,
+	(newValue:any) => {
+		// console.log(newValue.name) 
+		menuActive.value = newValue.name
+	},
+	{immediate: true, deep: true}
+)  
+onMounted(async () => {
+    if (vouchers_amount.value == 0) {
+        await vouchers.getVouchersData()
+    }
+
+})
+function headerAffixChange(e) {
+	// console.log(e)
+	headerAffixStatus.value = e
+} 
+const onBack = () => {
+	router.go(-1) 
+}
+const subTitle = computed(() => {
+	return menuListAll.value.filter(ele => {
+		return ele.children && ele.children.some(item => {
+			return item.index == menuActive.value
+		})
+	})[0]?.label
+})
+</script>
+<style lang="scss" scoped>
+@import '@/styles/iconfont.css';
+@import '@/styles/mediaScreen.scss';
+.box {
+    @extend %box-sizing;
+
+    ::v-deep {
+        .el-tabs {
+            // --el-tabs-header-height: 50px!important;
+        }
+
+        .el-tabs__item {
+            // color: #707173; 
+        }
+
+        .el-tabs__item.is-active {
+            color: var(--el-color-primary);
+        }
+
+        .el-tabs__nav-wrap::after {
+            height: 1px;
+        }
+    }
+}
+
+
+.search-in-select {
+	width: 115px;
+}
+ 
+.user-wrap {
+	width: 100%;
+	::v-deep {
+		.el-menu-item {
+			color: #888;
+			&.is-active {
+				color: $uni-color-primary;
+			}
+		}
+		.el-sub-menu__title,
+		.logout {
+			font-weight: bold;
+			color: #333;
+		}
+	}
+	&.fx_mode {
+		.home-w {
+			min-width: 1440px;
+			max-width: 100vw;
+			padding-top: 0!important;
+		}
+		.item-menus.item {
+			display: none;
+		}
+		.item-main.item {
+			width: 100%;
+			flex: 1;
+			margin: 0!important;
+			.el-page-header {
+				display: none;
+			}
+		}
+	}
+} 
+.item-menus {
+	// background-color: #fff;	
+	width: $user-menus-w;
+	// position: fixed;
+	// top: 96px;
+	// z-index: 100;
+	// height: calc(100vh - 96px); 
+	
+}
+.menus-w {
+	height: calc(100vh - ($header-h) - 20px);
+	box-sizing: border-box;
+	width: 100%;
+}
+.item-main {
+	background-color: #fff;
+	flex: 0 0 calc(100% - $user-menus-w);
+	width: calc(100% - $user-menus-w);
+	min-height: calc(100vh - 20px - ($header-h));
+	// padding-left: 10px;
+	// padding-right: 10px;
+	@extend %box-sizing;
+}
+.el-page-header {
+	::v-deep {
+		.el-page-header__title {
+			color: #999;
+		}
+	}
+}
+.menus-btn-h5 {
+	display: none;
+	position: fixed;
+	right: 20px;
+	bottom: 80px; 
+	z-index: 80; 
+	border-radius: 50%;
+	overflow: hidden;
+	.el-button {
+		width: 50px;
+		height: 50px;
+	}
+	@media (max-width: 768px) {
+		display: block;
+	}
+}
+</style>

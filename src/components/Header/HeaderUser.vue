@@ -11,7 +11,7 @@
 					/></a>
 				</div>
 				<div class="main-nav">
-					<template v-if="role ==2 || role == 3">
+					<template v-if="(role ==2 || role == 3) && !simple">
 						<div class="nav-item">
 							<el-button  
 								color="#626aef"
@@ -23,6 +23,19 @@
 								<template v-if="role == 2">运营商管理中心</template> 
 								<template v-if="role == 3">VIP商家管理中心</template> 
 								
+							</el-button> 
+						</div>
+					</template>
+					<template v-if="showVouchersMenus == 1 && !simple">
+						<div class="nav-item">
+							<el-button  
+								color="#626aef"
+								dark
+								icon="Switch" 
+								class="text-bold u-font-13 u-radius-10"
+								@click="router.push({name: 'vouchers_list'})"
+								>
+								<template v-if="showVouchersMenus == 1">企业福利</template> 
 							</el-button> 
 						</div>
 					</template>
@@ -52,7 +65,7 @@ import { ref, watch, computed, onMounted, toRefs  } from "vue";
 import router from "@/router/guard" 
 import { userStore } from '@/stores/user'
 const user = userStore()
-const { role } = toRefs(user)
+const { role,showVouchersMenus } = toRefs(user)
 const routerName = computed(() => { 
 	return router.currentRoute.value.name
 })
@@ -62,6 +75,10 @@ const props = defineProps({
 		deafult: () => {
 			return {}
 		}
+	},
+	simple: {
+		type: Boolean,
+		deafult: false
 	}
 })
 

@@ -147,3 +147,13 @@ export const send_vouchers = (data) => axios.get('Userapi/send_vouchers', data)
 export const down_vouchers_export = (data) => axios.get('Userapi/down_vouchers_export', data)
 // vouchers_amount 福利券额度
 export const vouchers_amount = (data) => axios.get('Userapi/vouchers_amount', data)
+
+
+// order_list1  
+export const order_list1 = (data) => axios.get('Userapi/order_list1', data)
+// order_detail1 
+export const order_detail1 = (data) => axios.get('Userapi/order_detail1', data)
+// product_zone 福利商品列表 参数p
+export const product_zone = (data) => axios.get('Userapi/product_zone', data)
+// product_detail1 福利商品详情 
+export const product_detail1 = (data) => axios.get('Userapi/product_detail1', data)

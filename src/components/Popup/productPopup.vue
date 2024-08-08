@@ -151,11 +151,15 @@ const $api = inject('$api')
 const props = defineProps({
 	id: {
 		type: String,
-        detail: ''
+        default: ''
+	},
+	api: {
+		type: String,
+        default: 'product_detail'
 	},
     show: {
         type: Boolean,
-        detail: false
+        default: false
     }
 });     
 const {
@@ -213,8 +217,8 @@ const skuPrice = computed(() => {
 onMounted(async () => { 
 	
 }) 
-const getData = async () => {
-	const res = await $api.product_detail({ params: { id: props.id } })
+const getData = async () => { 
+	const res = await $api[props.api]({ params: { id: props.id } })
 	if(res.code == 1) {
 		product_base_data.value = res.list
 		spec_prices_data.value = res.spec_prices

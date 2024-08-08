@@ -111,15 +111,15 @@ const $api: any = inject('$api')
 const props = defineProps({
 	id: {
 		type: String,
-        detail: ''
+        default: ''
 	},
     show: {
         type: Boolean,
-        detail: false
+        default: false
     },
     title: {
 		type: String,
-        detail: ''
+        default: ''
 	},
     list: {
         type: Array,

@@ -18,23 +18,26 @@ export const downloadFile = (response: AxiosResponse) => {
         const fileReader = new FileReader();
         fileReader.onload = function () {
             try {
-                console.log("result:", this.result);
+                // console.log("result:", this.result);
                 const jsonData = JSON.parse((this as any).result); // 成功 说明是普通对象数据
                 if (jsonData?.code !== 200) {
                     ElMessage.error(jsonData?.message ?? "请求失败");
                     reject(jsonData);
                 }
-            } catch (err) {
+            } catch (err) {  
                 // 解析成对象失败，说明是正常的文件流
-                const blob = new Blob([response.data]);
+                const blob = new Blob([response.data], {
+                    type: "application/x-msdownload;charset=UTF-8",
+                });
                 // 本地保存文件
                 const url = window.URL.createObjectURL(blob);
                 const link = document.createElement("a");
                 link.href = url;
-                const filename = response?.headers?.["content-disposition"]
-                    ?.split("filename*=")?.[1]
-                    ?.substr(7);
-                link.setAttribute("download", decodeURI(filename));
+                // const filename = response?.headers?.["content-disposition"]
+                //     ?.split("filename*=")?.[1]
+                //     ?.substr(7);
+                // link.setAttribute("download", decodeURI(filename));
+                link.setAttribute("download", `${new Date().getTime()}.xls`);
                 document.body.appendChild(link);
                 link.click();
                 resolve(response.data);

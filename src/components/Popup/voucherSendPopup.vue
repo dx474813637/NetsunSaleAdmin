@@ -24,7 +24,8 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted, inject, toRefs, computed, watch } from 'vue';   
+import { reactive, ref, onMounted, inject, toRefs, computed, watch } from 'vue';  
+import router from "@/router/guard" 
 import { cateStore } from '@/stores/cate'; 
 import { genFileId,ElNotification, ElMessage } from 'element-plus'
 import test from '@/utils/test.js'
@@ -32,15 +33,18 @@ const cate = cateStore();
 import useProductSku from '@/hook/useProductSku.ts'
 import {isObjectEqual} from '@/utils/index'
 let { freight_list } = toRefs(cate);  
+import { useVouchersStore } from '@/stores/vouchers'
+const vouchers = useVouchersStore()
+const {  page_update } = toRefs(vouchers)
 const $api:any = inject('$api')
 const props = defineProps({
 	id: {
 		type: String,
-        detail: ''
+        default: ''
 	},
     show: {
         type: Boolean,
-        detail: false
+        default: false
     },
 	voucherData: {
 		type: Object,
@@ -61,6 +65,9 @@ const checkMobile = (rule: any, value: any, callback: any) => {
     callback()
   }
 }
+const routerName = computed(() => {
+    return router.currentRoute.value.name
+})
 const rules = reactive<FormRules<typeof ruleForm>>({ 
     phone: [{
 		validator: checkMobile, 
@@ -95,7 +102,8 @@ async function submitForm (formName) {
 				const res = await $api.send_vouchers({params: {id: props.voucherData.id, ...voucherSendForm.value}})
 				if(res.code != 1) return; 
 				ElMessage.success(res.msg)
-				emit('success')
+				// emit('success')
+				if(routerName.value == 'vouchers_list') page_update.value = true
 				dialogTableVisible.value = false 
 			} catch (error) {
 				

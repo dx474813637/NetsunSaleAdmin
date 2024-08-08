@@ -1,13 +1,15 @@
 <!--  -->
 <template>
-    <div class="box u-p-10 u-radius-15 bg-white ">
+    <div class="box u-p-10 u-radius-15 bg-white "> 
+        <voucher-header></voucher-header>
         <table-vouchers-list isSendBtn :update="update" @sendEvent="sendEvent" @updateBackEvent="updateBackEvent"></table-vouchers-list> 
-        <voucher-send-popup :show="dialogTableVisible" :update="update" :voucherData="voucherData" @setShow="setShow" @success="successEvent"></voucher-send-popup> 
+        <voucher-send-popup :show="dialogTableVisible" :voucherData="voucherData" @setShow="setShow" @success="successEvent"></voucher-send-popup> 
     </div>
   </template>
   
   <script setup lang='ts'>
   import { reactive,ref, inject} from 'vue'  
+  
   const $api: any = inject('$api')
   // $api.product()  
   const voucherData = ref({});

@@ -10,7 +10,6 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AddVoucherPopup: typeof import('./src/components/Popup/addVoucherPopup.vue')['default']
-    copy: typeof import('./src/components/Popup/expressPopup copy.vue')['default']
     DiyForm: typeof import('./src/components/DiyForm/DiyForm.vue')['default']
     DiyFormItems: typeof import('./src/components/DiyForm/DiyFormItems.vue')['default']
     Editor: typeof import('./src/components/Editor/Editor.vue')['default']
@@ -27,6 +26,7 @@ declare module '@vue/runtime-core' {
     ElCountdown: typeof import('element-plus/es')['ElCountdown']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDialog: typeof import('element-plus/es')['ElDialog']
+    ElDivider: typeof import('element-plus/es')['ElDivider']
     ElDrawer: typeof import('element-plus/es')['ElDrawer']
     ElEmpty: typeof import('element-plus/es')['ElEmpty']
     ElForm: typeof import('element-plus/es')['ElForm']
@@ -80,6 +80,7 @@ declare module '@vue/runtime-core' {
     IEpPictureFilled: typeof import('~icons/ep/picture-filled')['default']
     IEpSelect: typeof import('~icons/ep/select')['default']
     MenusIndex: typeof import('./src/components/Menus/MenusIndex.vue')['default']
+    MenusIndexVoucher: typeof import('./src/components/Menus/MenusIndexVoucher.vue')['default']
     OrderPopup: typeof import('./src/components/orderPopup/orderPopup.vue')['default']
     OrderStatement2Popup: typeof import('./src/components/Popup/orderStatement2Popup.vue')['default']
     ProductFocusing: typeof import('./src/components/ProductFocusing/ProductFocusing.vue')['default']
@@ -99,9 +100,11 @@ declare module '@vue/runtime-core' {
     TableOrderNew: typeof import('./src/components/Table/TableOrderNew.vue')['default']
     TableOrderRzPay: typeof import('./src/components/Table/TableOrderRzPay.vue')['default']
     TableOrderService: typeof import('./src/components/Table/TableOrderService.vue')['default']
+    TableOrderVoucher: typeof import('./src/components/Table/TableOrderVoucher.vue')['default']
     TablePerson: typeof import('./src/components/Table/TablePerson.vue')['default']
     TableProduct: typeof import('./src/components/Table/TableProduct.vue')['default']
     TableProductOm: typeof import('./src/components/Table/TableProductOm.vue')['default']
+    TableProductZone: typeof import('./src/components/Table/TableProductZone.vue')['default']
     TableQuery: typeof import('./src/components/Table/TableQuery.vue')['default']
     TableQueryProduct: typeof import('./src/components/Table/TableQueryProduct.vue')['default']
     TableShop: typeof import('./src/components/Table/TableShop.vue')['default']
@@ -117,6 +120,7 @@ declare module '@vue/runtime-core' {
     TableWorkers: typeof import('./src/components/Table/TableWorkers.vue')['default']
     TableWorkers2: typeof import('./src/components/Table/TableWorkers2.vue')['default']
     UploadPopup: typeof import('./src/components/Popup/uploadPopup.vue')['default']
+    VoucherHeader: typeof import('./src/components/VoucherHeader/VoucherHeader.vue')['default']
     VoucherSendPopup: typeof import('./src/components/Popup/voucherSendPopup.vue')['default']
   }
   export interface ComponentCustomProperties {

@@ -1,5 +1,5 @@
 <template>
-    <el-dialog customClass="cusTomClass" v-model="dialogTableVisible" append-to-body width="50vw" title="添加福利券" @open="open" :close-on-press-escape="false" >
+    <el-dialog customClass="cusTomClass" draggable top="180px" v-model="dialogTableVisible" append-to-body width="50vw" title="添加福利券" @open="open" :close-on-press-escape="false" >
         <div class="home-w" v-loading="loading"> 
 			<div>
 				<DiyForm
@@ -29,11 +29,15 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted, inject, toRefs, computed, watch } from 'vue';   
+import { reactive, ref, onMounted, inject, toRefs, computed, watch } from 'vue'; 
+import router from "@/router/guard"  
 import { genFileId,ElNotification, ElMessage } from 'element-plus'
+import { useVouchersStore } from '@/stores/vouchers'
+const vouchers = useVouchersStore()
 import test from '@/utils/test.js'
 import { cateStore } from '@/stores/cate'; 
 const cate = cateStore();
+const {  page_update } = toRefs(vouchers)
 import useProductSku from '@/hook/useProductSku.ts'
 import {isObjectEqual} from '@/utils/index'
 let { freight_list } = toRefs(cate);  
@@ -42,11 +46,11 @@ let phoneNum = ref(0)
 const props = defineProps({
 	id: {
 		type: String,
-        detail: ''
+        default: ''
 	},
     show: {
         type: Boolean,
-        detail: false
+        default: false
     }
 });   
 
@@ -63,7 +67,7 @@ const checkMobile = (rule: any, value: any, callback: any) => {
 				flag += 1
 			}
 		}
-		if(flag == 2) {
+		if(flag >= 2) {
 			callback(new Error('该手机已存在'))
 		}
 		callback()
@@ -89,6 +93,7 @@ let diyFormData:any = reactive({
             prop: "price",
             class: 'u-m-b-10',
             place: "面额/元", 
+			type: 'number',
             required: true
         }, 
         {
@@ -128,6 +133,7 @@ watch(
 					prop: "num",
 					class: 'u-m-b-10',
 					place: "数量", 
+					type: 'number',
 					required: true
 				}
 			)
@@ -166,10 +172,14 @@ watch(
 		immediate: true
 	}
 )
+
+const routerName = computed(() => {
+    return router.currentRoute.value.name
+})
 const list = ref({})
 const renderVouchersloading = ref(false)
 const loading = ref(false)
-const emit = defineEmits(["setShow"]);
+const emit = defineEmits(["setShow" ]);
 const dialogTableVisible = computed({
     set(v) {
 		console.log(v)
@@ -237,6 +247,9 @@ async function onDiyFormConfirm(e) {
 		const res = await $api.add_vouchers_up(data)
 		if(res.code == 1) {
 			ElMessage.success(res.msg)
+			if(routerName.value == 'vouchers_list') page_update.value = true
+			// console.log(page_update.value)
+			await vouchers.getVouchersData() 
 		}
 	} catch (error) {
 		

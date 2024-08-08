@@ -51,13 +51,12 @@
 import { reactive,ref,computed, inject, onMounted, toRefs,watch } from 'vue'
 import type { UploadFile  } from 'element-plus'
 import { genFileId,ElNotification, ElMessage } from 'element-plus'
+import { useVouchersStore } from '@/stores/vouchers'
 import router from "@/router/guard" 
 import { cateStore } from '@/stores/cate' 
-import {useSettingsStore} from '@/stores/settings'
-import useProductSku from '@/hook/useProductSku'
-const {
-    sku2treeData
-} = useProductSku()
+import {useSettingsStore} from '@/stores/settings' 
+const vouchers = useVouchersStore()
+const { vouchers_amount, vouchers_amount_loading, page_update } = toRefs(vouchers)
 const cate = cateStore()
 const settings = useSettingsStore()
 const { freight_list } = toRefs(cate)
@@ -118,7 +117,19 @@ watch(
     async (val) => {
         loading.value = true; 
         await getData()
+        loading.value = false; 
+    },
+    {deep: true}
+)
+watch(
+    () => page_update.value,
+    async (val) => {
+        console.log('22', val)
+        if(!val) return
+        loading.value = true; 
+        await getData()
         loading.value = false;
+        page_update.value = false
     },
     {deep: true}
 )

@@ -1,6 +1,7 @@
 <!--  -->
 <template>
     <div class="box u-p-10 u-radius-15 bg-white ">
+        <voucher-header></voucher-header>
         <table-vouchers-list api="use_vouchers" ></table-vouchers-list> 
     </div>
   </template>
