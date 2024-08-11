@@ -8,7 +8,13 @@
         :max-height="maxHeight" 
         >  
         <!-- <el-table-column label="用户" align="center" prop="user" width="60" ></el-table-column>  -->
-        <el-table-column label="面额" align="center" prop="amount" width="120" ></el-table-column> 
+        <el-table-column label="面额" align="center" prop="amount" width="120" >
+            <template #default="{ row }"> 
+                <el-text type="danger">{{ row.amount }} 元</el-text>
+                
+            </template>
+        </el-table-column> 
+        <el-table-column label="用户UID" align="center" prop="login"  v-if="!isSendBtn"></el-table-column> 
         <el-table-column label="卡号" align="center" prop="id" ></el-table-column> 
         <el-table-column label="GUID" align="center" prop="guid" ></el-table-column> 
         <el-table-column label="创建时间" align="center" prop="ctime" ></el-table-column> 
@@ -23,6 +29,17 @@
         <el-table-column label="操作" align="center" width="100" v-if="isSendBtn">
             <template #default="{ row }"> 
                 <el-button type="primary" size="small" v-if="row.zt == 0" @click="handleSendBtn(row)">发送短信</el-button>
+                <el-popconfirm 
+                    title="撤销确认" 
+                    @confirm="handleDelBtn(row)"
+                    confirm-button-text="确认"
+                    cancel-button-text="取消"
+                    >
+                    <template #reference>
+                        <el-button type="danger" size="small" v-if="row.zt == 1" >撤销</el-button> 
+                    </template>
+                </el-popconfirm>
+                
             </template>
         </el-table-column> 
         <template #empty>
@@ -187,6 +204,19 @@ const changeProductOnStatus = async (prod) => {
 
 function handleSendBtn(data) {
     emit('sendEvent', {data})
+}
+async function handleDelBtn(data) {
+    const res = await $api.del_vouchers({params: {id: data.id}}); 
+    if(res.code == 1) {
+        page_update.value = true
+        vouchers.getVouchersData()  
+        ElNotification({
+            title: '系统消息',
+            message: res.msg,
+            type: 'success',
+            position: 'bottom-right',
+        })
+    }
 }
 
 

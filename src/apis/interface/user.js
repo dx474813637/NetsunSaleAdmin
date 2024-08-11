@@ -147,6 +147,8 @@ export const send_vouchers = (data) => axios.get('Userapi/send_vouchers', data)
 export const down_vouchers_export = (data) => axios.get('Userapi/down_vouchers_export', data)
 // vouchers_amount 福利券额度
 export const vouchers_amount = (data) => axios.get('Userapi/vouchers_amount', data)
+// del_vouchers 参数id 在福利券列表，已发送状态下，多一个按钮，撤销 
+export const del_vouchers = (data) => axios.get('Userapi/del_vouchers', data)
 
 
 // order_list1  
@@ -157,3 +159,5 @@ export const order_detail1 = (data) => axios.get('Userapi/order_detail1', data)
 export const product_zone = (data) => axios.get('Userapi/product_zone', data)
 // product_detail1 福利商品详情 
 export const product_detail1 = (data) => axios.get('Userapi/product_detail1', data)
+// excel_add 传Excel文件
+export const excel_add = (data, config) => axios.post('Userapi/excel_add', data, config)  

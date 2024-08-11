@@ -119,6 +119,7 @@ declare module '@vue/runtime-core' {
     TableWhiteSeller: typeof import('./src/components/Table/TableWhiteSeller.vue')['default']
     TableWorkers: typeof import('./src/components/Table/TableWorkers.vue')['default']
     TableWorkers2: typeof import('./src/components/Table/TableWorkers2.vue')['default']
+    UploadExePopup: typeof import('./src/components/Popup/uploadExePopup.vue')['default']
     UploadPopup: typeof import('./src/components/Popup/uploadPopup.vue')['default']
     VoucherHeader: typeof import('./src/components/VoucherHeader/VoucherHeader.vue')['default']
     VoucherSendPopup: typeof import('./src/components/Popup/voucherSendPopup.vue')['default']

@@ -417,7 +417,7 @@ const routes = [
                     role: [1, 2, 3]
                 },
                 component: () => import('@/views/vouchers/product_zone/product_zone.vue'),
-            },
+            },  
         ]
     },
     {

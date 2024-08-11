@@ -3,7 +3,7 @@
     <div>
         <div class="bg u-p-10 box-border u-p-l-20 u-p-r-20">
             <el-row :gutter="20"> 
-                <el-col :span="8" :xs="24" class="u-flex u-flex-items-center">
+                <el-col :span="7" :xs="24" class="u-flex u-flex-items-center">
                     <img class="u-m-r-10" height="50" :src="`https://www.sunmaxx.cn/Public/fulizq/yhicon.png?time=${new Date().getTime()}`" alt="">
                     <div class="u-flex-1 u-flex-colum ">
                         <div>
@@ -14,7 +14,7 @@
                         </div>
                     </div>
                 </el-col>
-                <el-col :span="8" :xs="24" class="u-flex u-flex-end">
+                <el-col :span="7" :xs="24" class="u-flex u-flex-end">
                     <div class="u-flex-1 u-flex " style="width: 100%;">
                         <el-divider direction="vertical" style="height: 50px;" />
                         <div class="u-m-l-30">
@@ -29,14 +29,14 @@
                         </div>
                     </div>
                 </el-col>
-                <el-col :span="8" :xs="24" class="u-flex u-flex-end">
+                <el-col :span="10" :xs="24" class="u-flex u-flex-end">
                     <div class="u-flex-1 u-flex-colum ">
                         <el-text type="info">福利券生成与发放：</el-text>
                         <div class="u-flex u-flex-items-center u-m-t-5"> 
                             <el-button plain type="primary" icon="circle-plus" @click="showAddBtn">添加福利券</el-button>
                             <el-button plain type="primary" icon="download" :disabled="downloadLoading" :loading="downloadLoading"
                                 @click="downloadBtn">下载未使用福利券</el-button>
-                            <el-button plain type="primary" icon="circle-plus" @click="showUrlBtn">导入生成</el-button>
+                            <el-button plain type="primary" icon="upload" @click="showExeUploadBtn">导入生成</el-button>
                         </div>
                     </div>
                     
@@ -50,14 +50,21 @@
                     :name="item.value"></el-tab-pane>
             </el-tabs>
         </div>
-
+        
+        <upload-exe-popup
+            :show="uploadShow"  
+            :title="uploadTitle"
+            :list="uploadList"
+            @setShow="setShow2"
+            @updateData="updateData"
+        ></upload-exe-popup> 
         <add-voucher-popup :show="addVoucherShow" @setShow="setShow"></add-voucher-popup>
     </div>
 </template>
 
 <script setup lang='ts'>
-import { useVouchersStore } from '@/stores/vouchers'
 import router from "@/router/guard"
+import { useVouchersStore } from '@/stores/vouchers'
 const vouchers = useVouchersStore()
 const { vouchers_amount, vouchers_amount_loading, page_update } = toRefs(vouchers)
 const $api: any = inject('$api')
@@ -70,6 +77,9 @@ const tabs_list = ref([
     { label: '福利券使用列表', value: 'vouchers_list_used' },
 ])
 
+const uploadShow = ref(false) 
+const uploadTitle = ref('文件上传') 
+const uploadList = ref([]) 
 const routerName = computed(() => {
     return router.currentRoute.value.name
 })
@@ -95,8 +105,9 @@ function tabsChangeEvent() {
 function showAddBtn() {
     addVoucherShow.value = true
 }
-function showUrlBtn() {
-    window.open('https://www.sunmaxx.cn/User/up_vouchers', '_blank', '');
+function showExeUploadBtn() {
+    uploadShow.value = true
+    // window.open('https://www.sunmaxx.cn/User/up_vouchers', '_blank', '');
 }
 async function downloadBtn() {
     downloadLoading.value = true
@@ -135,8 +146,14 @@ async function downloadBtn() {
 
 function setShow(v) {
     addVoucherShow.value = v
-  } 
+} 
 
+function setShow2(v) {
+	uploadShow.value = v
+} 
+function updateData(data) { 
+    console.log(data)
+}
 </script>
 <style lang='scss' scoped>
     
