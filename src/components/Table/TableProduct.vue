@@ -344,16 +344,16 @@ watch(
     {deep: true}
 )
 let uploadRefs2: any = []
-const setUploadRef = (el: any, index: string, prop) => {
-    if (el) { 
-        prop[index] = el 
-    }
-}
 async function refreshData() {
     
     loading.value = true; 
     await getData()
     loading.value = false;
+}
+const setUploadRef = (el: any, index: string, prop) => {
+    if (el) { 
+        prop[index] = el 
+    }
 }
 const handlePictureCardPreview = (file: UploadFile) => {
     dialogImageUrl.value = file.url!

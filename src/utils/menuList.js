@@ -4,7 +4,7 @@
 		"type": "title",
 		"index": "1",
 		"role": "[1, 2, 3]",
-		"icon": "icon-shiyanshifangjian",
+		"icon": "icon-shiyanshifangjian", 
 		"children": [
 			{
 				"label": "旺铺信息", 
@@ -206,13 +206,81 @@
 				"route": {
 					"name": "bond_list"
 				}
+			}, 
+			{
+				"label": "福利中心", 
+				"icon": "",
+				"index": "vouchers_statement_list", 
+				"role": "[1, 2, 3]", 
+				"route": {
+					"name": "vouchers_statement_list"
+				} 
+			}
+		]
+	}, 
+	{
+		"label": "优惠活动管理",
+		"type": "title", 
+		"index": "yhhd",
+		"role": "[1, 2, 3, 4]", 
+		"icon": "icon-daibanshiwu",
+		"children": [
+			{
+				"label": "活动列表", 
+				"icon": "", 
+				"index": "coupon_list", 
+				"role": "[1, 2, 3]", 
+				"route": {
+					"name": "coupon_list"
+				} 
+			} 
+		]
+	}, 
+	{
+		"label": "福利券中心",
+		"type": "title",
+		"wx": "1",
+		"index": "5",
+		"role": "[1, 2, 3, 4]", 
+		"icon": "icon-yiqifenlei",
+		"children": [
+			{
+				"label": "福利券申请", 
+				"icon": "",
+				"wx": "1",
+				"index": "welfare", 
+				"role": "[1, 2, 3]", 
+				"route": {
+					"name": "welfare"
+				} 
+			},
+			{
+				"label": "福利券记录", 
+				"icon": "",
+				"wx": "1",
+				"index": "welfare_list", 
+				"role": "[1, 2, 3]", 
+				"route": {
+					"name": "welfare_list"
+				} 
+			},
+			{
+				"label": "开票记录", 
+				"icon": "",
+				"wx": "1",
+				"index": "welfare_invoice_list", 
+				"role": "[1, 2, 3]", 
+				"route": {
+					"name": "welfare_invoice_list"
+				} 
 			}
 		]
 	}, 
 	{
 		"label": "账户管理",
-		"type": "title",
+		"type": "title", 
 		"index": "3",
+		"wx": "1",
 		"role": "[1, 2, 3, 4]", 
 		"icon": "icon-quanxianguanli",
 		"children": [
@@ -226,8 +294,9 @@
 				}
 			},
 			{
-				"label": "退出登录", 
+				"label": "退出登录",  
 				"role": "[1, 2, 3, 4]", 
+				"wx": "1",
 				"url": "https://www.sunmaxx.cn/Index/logout",
 				"linkWay": "replace"
 			},

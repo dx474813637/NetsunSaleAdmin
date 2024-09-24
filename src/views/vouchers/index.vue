@@ -1,24 +1,13 @@
 <!--  -->
-<template>
-	<el-affix @change="headerAffixChange">
-		<header-user :customStyle="headerAffixStatus? {
-			backgroundImage: 'radial-gradient(transparent 1px, #fff 1px)',
-			boxShadow: '0 5px 5px rgba(90,90,90,.08)'
-		} :  {
-			backgroundImage: 'radial-gradient(transparent 1px, #F1F6FD 1px)',
-			boxShadow: 'none'
-		}"
-        simple
-        ></header-user>
-	</el-affix>
+<template> 
 	
 	<el-drawer v-model="menusShow" :with-header="false" append-to-body value="ltr" size="80vw">
-		<menus-index class="menus-h5"></menus-index>
+		<menus-index-voucher class="menus-h5"></menus-index-voucher>
 	</el-drawer>
 	<div class="user-wrap " :class="{fx_mode: routerName == 'fx_helper'}">
 		<div class="home-w u-flex u-flex-items-start u-p-t-15 box-border">
             <div class="item item-menus u-m-r-15" >  
-				<el-affix class="menus-index-affix" :offset="76">
+				<el-affix class="menus-index-affix" :offset="0">
 					<div class="u-p-5 u-radius-8 bg-white menus-w box-border">
                         <template v-if="showMenus == '1'">
                             <menus-index-voucher></menus-index-voucher>
@@ -61,19 +50,33 @@
     </div>
    
 	<div class="menus-btn-h5">
-		<el-button 
-			type="primary" 
-			class="u-font-25" 
-			size="large" 
-			icon="Operation" 
-			circle 
-			@click="menusShow = !menusShow"
-		/>
+		<div class="item u-m-b-10" v-if="showXcxMenus == 1"> 
+			<el-button 
+				type="danger" 
+				class="u-font-14" 
+				size="large"  
+				plain
+				circle  
+				@click="backWxmp"
+			>我 的</el-button>
+		</div>
+		<div class="item" v-if="showXcxMenus != 1">
+			<el-button 
+				type="primary" 
+				class="u-font-25" 
+				size="large" 
+				
+				icon="Operation" 
+				circle 
+				@click="menusShow = !menusShow"
+			/>
+		</div>
 	</div>
 
 </template>
 
 <script setup lang="ts">
+import wx from 'weixin-js-sdk'
 import { ref, watch, computed, onMounted, toRefs } from "vue";
 import router from "@/router/guard"
 import { useSettingsStore } from '@/stores/settings'
@@ -87,7 +90,7 @@ const vouchers = useVouchersStore()
 const { vouchers_amount, vouchers_amount_loading, page_update } = toRefs(vouchers)
 const user = userStore()
 const menusShow = ref(false)
-const { cpy_info, showMenus } = toRefs(user)
+const { cpy_info, showMenus, showXcxMenus } = toRefs(user)
 const { webview, isH5 } = toRefs(useSettings)
 const addVoucherShow = ref(false); 
 
@@ -136,6 +139,10 @@ const subTitle = computed(() => {
 		})
 	})[0]?.label
 })
+function backWxmp() {
+	console.log(wx)
+	wx.miniProgram.reLaunch({url: '/pages_user/index/index'})
+}
 </script>
 <style lang="scss" scoped>
 @import '@/styles/iconfont.css';
@@ -236,12 +243,15 @@ const subTitle = computed(() => {
 	position: fixed;
 	right: 20px;
 	bottom: 80px; 
-	z-index: 80; 
-	border-radius: 50%;
+	z-index: 80;  
 	overflow: hidden;
+	.item {
+
+	}
 	.el-button {
 		width: 50px;
 		height: 50px;
+		border-radius: 50%;
 	}
 	@media (max-width: 768px) {
 		display: block;

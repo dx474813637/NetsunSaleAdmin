@@ -18,6 +18,10 @@ router.beforeEach(async (to, from, next) => {
     const { router_mode, menus } = toRefs(cate)
     
     start()
+    if(to.name == 'reg' || to.name == 'login') {
+        next()
+        return
+    }
     let getCpy = false
     if(!cpy_info.value.hasOwnProperty('id')) {
         await user.getCpyData();

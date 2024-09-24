@@ -62,7 +62,8 @@ export const userStore = defineStore('user', {
 			],
 			subAccount: [],
 			showMenus: 0,
-			showVouchersMenus: 0
+			showVouchersMenus: 0,
+			showXcxMenus: 0
 		};
 	},
 	getters: {
@@ -78,6 +79,7 @@ export const userStore = defineStore('user', {
 			console.log('清除token 登录过期')
 			this.user_info = {}
 			this.cpy_info = {}
+			this.setCookie('sunmaxx_st_company', '', 30)
 			localStorage.removeItem('token')
 			localStorage.removeItem('login')
 		},
@@ -87,6 +89,7 @@ export const userStore = defineStore('user', {
 				this.role = res.role
 				this.showMenus = res.role_vouchers
 				this.showVouchersMenus = res.role_vouchers2
+				this.showXcxMenus = res.role_xcx
 			}
 		},
 		async getSubAccData(needLoading = false) {
@@ -112,5 +115,11 @@ export const userStore = defineStore('user', {
 				this.cpy_info = res.list || {}
 			}
 		},
+		setCookie(name, value, days) {
+			const d = new Date();
+			d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+			const expires = "expires=" + d.toUTCString();
+			document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
+		}
 	},
 });

@@ -57,20 +57,33 @@
 		</div>
 	</div>
 	<div class="menus-btn-h5">
-		<el-button 
-			type="primary" 
-			class="u-font-25" 
-			size="large" 
-			icon="Operation" 
-			circle 
-			@click="menusShow = !menusShow"
-		/>
+		<div class="item u-m-b-10" v-if="showXcxMenus == 1"> 
+			<el-button 
+				type="danger" 
+				class="u-font-14" 
+				size="large"  
+				plain
+				circle  
+				@click="backWxmp"
+			>我 的</el-button>
+		</div>
+		<div class="item">
+			<el-button 
+				type="primary" 
+				class="u-font-25" 
+				size="large" 
+				icon="Operation" 
+				circle 
+				@click="menusShow = !menusShow"
+			/>
+		</div>
 	</div>
 	<!-- <footer-help></footer-help> -->
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts"> 
 import { ref, watch, computed, onMounted, toRefs  } from "vue"; 
+import wx from 'weixin-js-sdk'
 import router from "@/router/guard"  
 import {useSettingsStore} from '@/stores/settings'
 import {cateStore} from '@/stores/cate'
@@ -79,7 +92,7 @@ const useSettings = useSettingsStore()
 const cate = cateStore() 
 const {menuListAll, menuList} = toRefs(cate)  
 const user = userStore() 
-const {cpy_info} = toRefs(user)
+const {showXcxMenus} = toRefs(user)
 const { webview, isH5 } = toRefs(useSettings)
 const menuActive = ref('product_list')
 const menusShow = ref(false)
@@ -142,6 +155,20 @@ const addBtnList = [
 			name: 'bond_list_admin'
 		}
 	},
+	{
+		name: 'welfare',
+		title: '福利券申请记录',
+		to: {
+			name: 'welfare_list'
+		}
+	},
+	{
+		name: 'welfare_list',
+		title: '福利券申请',
+		to: {
+			name: 'welfare'
+		}
+	}, 
 ]
 onMounted(async () => {
 	// cate.getWarehouseData() 
@@ -175,6 +202,10 @@ function headerAffixChange(e) {
 	// console.log(e)
 	headerAffixStatus.value = e
 } 
+function backWxmp() {
+	console.log(wx)
+	wx.miniProgram.reLaunch({url: '/pages_user/index/index'})
+}
 </script> 
 <style lang="scss" scoped> 
 @import '@/styles/iconfont.css';
@@ -301,11 +332,14 @@ function headerAffixChange(e) {
 	right: 20px;
 	bottom: 80px; 
 	z-index: 80; 
-	border-radius: 50%;
 	overflow: hidden;
+	.item {
+
+	}
 	.el-button {
 		width: 50px;
 		height: 50px;
+		border-radius: 50%;
 	}
 	@media (max-width: 768px) {
 		display: block;

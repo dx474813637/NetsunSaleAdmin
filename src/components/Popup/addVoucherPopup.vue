@@ -1,5 +1,6 @@
 <template>
-    <el-dialog customClass="cusTomClass" draggable top="180px" v-model="dialogTableVisible" append-to-body width="50vw" title="添加福利券" @open="open" :close-on-press-escape="false" >
+    <el-dialog customClass="cusTomClass" draggable top="180px" v-model="dialogTableVisible" append-to-body 
+		:width="isH5? '90vw' : '50vw'" title="添加福利券" @open="open" :close-on-press-escape="false" >
         <div class="home-w" v-loading="loading"> 
 			<div>
 				<DiyForm
@@ -33,6 +34,9 @@ import { reactive, ref, onMounted, inject, toRefs, computed, watch } from 'vue';
 import router from "@/router/guard"  
 import { genFileId,ElNotification, ElMessage } from 'element-plus'
 import { useVouchersStore } from '@/stores/vouchers'
+import { useSettingsStore } from '@/stores/settings' 
+const settings = useSettingsStore()
+const { isH5 } = toRefs(settings)
 const vouchers = useVouchersStore()
 import test from '@/utils/test.js'
 import { cateStore } from '@/stores/cate'; 

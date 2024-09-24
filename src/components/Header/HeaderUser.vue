@@ -3,7 +3,12 @@
 		<div class="header-main">
 			<div class="home-w">
 				<div class="main-logo">
-					<a href="https://www.sunmaxx.cn/" title=""
+					<img v-if="showXcxMenus == 1"
+							src="/logo.png"
+							class="logo"
+							alt=""
+					/>
+					<a v-else href="https://www.sunmaxx.cn/" title=""
 						><img
 							src="/logo.png"
 							class="logo"
@@ -11,7 +16,7 @@
 					/></a>
 				</div>
 				<div class="main-nav">
-					<template v-if="(role ==2 || role == 3) && !simple">
+					<template v-if="(role ==2 || role == 3) && !simple && showXcxMenus != 1">
 						<div class="nav-item">
 							<el-button  
 								color="#626aef"
@@ -26,7 +31,7 @@
 							</el-button> 
 						</div>
 					</template>
-					<template v-if="showVouchersMenus == 1 && !simple">
+					<template v-if="(showVouchersMenus == 1 || showXcxMenus == 1) && !simple">
 						<div class="nav-item">
 							<el-button  
 								color="#626aef"
@@ -34,9 +39,7 @@
 								icon="Switch" 
 								class="text-bold u-font-13 u-radius-10"
 								@click="router.push({name: 'vouchers_list'})"
-								>
-								<template v-if="showVouchersMenus == 1">企业福利</template> 
-							</el-button> 
+							>企业福利</el-button> 
 						</div>
 					</template>
 					<!-- <template v-if="routerName == 'fx_helper'">
@@ -65,7 +68,7 @@ import { ref, watch, computed, onMounted, toRefs  } from "vue";
 import router from "@/router/guard" 
 import { userStore } from '@/stores/user'
 const user = userStore()
-const { role,showVouchersMenus } = toRefs(user)
+const { role,showVouchersMenus, showXcxMenus } = toRefs(user)
 const routerName = computed(() => { 
 	return router.currentRoute.value.name
 })

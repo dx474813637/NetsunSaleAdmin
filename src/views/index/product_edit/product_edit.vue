@@ -667,6 +667,7 @@
         :show="uploadShow"  
         :title="uploadTitle"
         :list="uploadList"
+        imgDrag
         @setShow="setShow"
         @updateData="updateData"
     ></upload-popup> 

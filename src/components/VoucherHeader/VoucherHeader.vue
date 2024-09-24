@@ -2,7 +2,37 @@
 <template>
     <div>
         <div class="bg u-p-10 box-border u-p-l-20 u-p-r-20">
-            <el-row :gutter="20"> 
+            <div v-if="showXcxMenus == 1"> 
+                <div class="u-flex u-flex-items-center">
+                    <img class="u-m-r-10" height="50" :src="`https://www.sunmaxx.cn/Public/fulizq/yhicon.png?time=${new Date().getTime()}`" alt="">
+                    <div class="u-flex-1 u-flex-colum ">
+                        <div>
+                            <el-text class="u-font-20" style="color: #000">企业福利券</el-text>
+                        </div>
+                        <div>
+                            <el-text type="info">仅用于发券，不可提现</el-text>
+                        </div>
+                    </div>
+                </div> 
+                <el-divider class="u-m-5 u-m-t-20" />
+                <div class="u-flex u-flex-items-end u-flex-between" >  
+                    <el-text type="info" class="u-font-14">福利券分发额度(可用)：</el-text>
+                    <div >
+                        <el-statistic :precision="2" :value="vouchers_amount"
+                            value-style="font-size: 24px; color: #f00" /> 
+                    </div> 
+                </div> 
+                <div class="u-flex u-flex-items-center u-flex-between" > 
+                    <div class="">
+                        <el-text type="info" class="u-font-14">福利券生成与发放：</el-text>
+                    </div>
+                    <div class="u-flex u-flex-items-center u-flex-wrap u-m-t-5"> 
+                        <el-button plain type="primary" icon="circle-plus" @click="showAddBtn">添加福利券</el-button> 
+                    </div>
+                    
+                </div>
+            </div>
+            <el-row :gutter="20" v-else> 
                 <el-col :span="7" :xs="24" class="u-flex u-flex-items-center">
                     <img class="u-m-r-10" height="50" :src="`https://www.sunmaxx.cn/Public/fulizq/yhicon.png?time=${new Date().getTime()}`" alt="">
                     <div class="u-flex-1 u-flex-colum ">
@@ -32,7 +62,7 @@
                 <el-col :span="10" :xs="24" class="u-flex u-flex-end">
                     <div class="u-flex-1 u-flex-colum ">
                         <el-text type="info">福利券生成与发放：</el-text>
-                        <div class="u-flex u-flex-items-center u-m-t-5"> 
+                        <div class="u-flex u-flex-items-center u-flex-wrap u-m-t-5"> 
                             <el-button plain type="primary" icon="circle-plus" @click="showAddBtn">添加福利券</el-button>
                             <el-button plain type="primary" icon="download" :disabled="downloadLoading" :loading="downloadLoading"
                                 @click="downloadBtn">下载未使用福利券</el-button>
@@ -68,6 +98,9 @@ import { useVouchersStore } from '@/stores/vouchers'
 const vouchers = useVouchersStore()
 const { vouchers_amount, vouchers_amount_loading, page_update } = toRefs(vouchers)
 const $api: any = inject('$api')
+import { userStore } from '@/stores/user'
+const user = userStore()
+const { showXcxMenus } = toRefs(user)
 
 const downloadLoading = ref(false) 
 const tab_active = ref('vouchers_list')

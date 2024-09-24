@@ -58,6 +58,7 @@
             :show="uploadShow"  
             :title="uploadTitle"
             :list="dynamicValidateForm.pic"
+            imgDrag
             @setShow="setShow"
             @updateData="updateData"
         ></upload-popup>

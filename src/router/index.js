@@ -306,6 +306,71 @@ const routes = [
                 },
                 component: () => import('@/views/index/order_statement_list/order_statement_list.vue'),
             },
+            {
+                path: 'vouchers_statement_list',
+                name: 'vouchers_statement_list',
+                meta: {
+                    title: '福利中心', 
+                    role: [1, 2, 3], 
+                },
+                component: () => import('@/views/index/vouchers_statement_list/vouchers_statement_list.vue'),
+            },
+            {
+                path: 'welfare',
+                name: 'welfare',
+                meta: {
+                    title: '福利券中心', 
+                    role: [1, 2, 3], 
+                },
+                component: () => import('@/views/index/welfare/welfare.vue'),
+            }, 
+            {
+                path: 'welfare_list',
+                name: 'welfare_list',
+                meta: {
+                    title: '福利券记录', 
+                    role: [1, 2, 3], 
+                },
+                component: () => import('@/views/index/welfare_list/welfare_list.vue'),
+            },
+            {
+                path: 'welfare_invoice_list',
+                name: 'welfare_invoice_list',
+                meta: {
+                    title: '福利券发票', 
+                    role: [1, 2, 3], 
+                },
+                component: () => import('@/views/index/welfare_invoice_list/welfare_invoice_list.vue'),
+            },
+            {
+                path: 'coupon_list',
+                name: 'coupon_list',
+                meta: {
+                    title: '优惠活动', 
+                    role: [1, 2, 3], 
+                },
+                component: () => import('@/views/index/coupon_list/coupon_list.vue'),
+            },
+            {
+                path: 'coupon_edit',
+                name: 'coupon_edit',
+                meta: {
+                    title: '编辑优惠活动',  
+                    role: [1, 2, 3], 
+                },
+                props:true, 
+                component: () => import('@/views/index/coupon_edit/coupon_edit.vue'),
+            },
+            {
+                path: 'coupon_add',
+                name: 'coupon_add',
+                meta: {
+                    title: '添加优惠活动',  
+                    role: [1, 2, 3], 
+                },
+                props:true, 
+                component: () => import('@/views/index/coupon_edit/coupon_edit.vue'),
+            },
         ]
     },
     {
@@ -419,6 +484,24 @@ const routes = [
                 component: () => import('@/views/vouchers/product_zone/product_zone.vue'),
             },  
         ]
+    },
+    {
+        path: '/reg',
+        name: 'reg',
+        meta: {
+            title: '注册',  
+            role: [1, 2, 3], 
+        },
+        component: () => import('@/views/reg/reg.vue'),
+    },
+    {
+        path: '/login',
+        name: 'login',
+        meta: {
+            title: '登录',  
+            role: [1, 2, 3], 
+        },
+        component: () => import('@/views/login/login.vue'),
     },
     {
         path: '/:pathMatch(.*)*',

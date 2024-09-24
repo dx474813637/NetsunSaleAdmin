@@ -29,21 +29,31 @@
             >
                 <template #item="{ element, index }">
                     <div class="draggable-item u-m-b-15 u-m-r-15">  
-                        <div class="image-w drag"> 
+                        <div class="image-w drag" :class="{
+                            'no-drag': !imgDrag
+                        }"> 
+                            <div
+                                class="pdf-item u-flex-column u-flex-items-center u-flex-center" 
+                                v-if="element.url.includes('pdf')"
+                            >
+                                <el-icon size="30"><Document /></el-icon>
+                                <el-text type="info" class="u-m-t-5">PDF文件</el-text>
+                            </div> 
                             <el-image 
                                 class="image-item" 
                                 :key="element.url" 
                                 :src="element.url" 
+                                v-else
                                 lazy  
                                 fit="cover"
-                            /> 
+                            />  
                             <div class="image-icon-w u-flex u-flex-items-center u-flex-around u-p-2">
                                 <div class="icon-item u-p-4 u-flex u-flex-items-center u-flex-center" @click="showImgView(element, index)">
                                     <el-icon size="16">
                                         <ZoomIn />
                                     </el-icon>
                                 </div>
-                                <div class="icon-item u-p-4 u-flex u-flex-items-center u-flex-center" @click="deleteImgView(element, index)">
+                                <div class="icon-item u-p-4 u-flex u-flex-items-center u-flex-center" @click="deleteImgView(element, index)" v-if="!readonly">
                                     <el-icon size="16">
                                         <Delete />
                                     </el-icon>
@@ -53,10 +63,10 @@
                     </div>
                 </template>
             </draggable> 
-            <div class="u-m-b-20" v-if="props.confirmShow"> 
+            <div class="u-m-b-20" v-if="props.confirmShow && !readonly" > 
                 <el-button type="danger" style="width: 100%" @click="handleConfirmBtn">提交</el-button>
             </div>
-            <div>
+            <div v-if="!readonly">
                 <el-upload
                     class="upload-demo"
                     action="" 
@@ -68,7 +78,7 @@
                 >
                     <el-icon class="el-icon--upload"><upload-filled /></el-icon>
                     <div class="el-upload__text">
-                        拖拽若干张图片至虚线框内 或 <em>点击进行上传</em>
+                        拖拽若干张图片/PDF文件至虚线框内 或 <em>点击进行上传</em>
                     </div>
                     <template #tip>
                         <div class="el-upload__tip">
@@ -120,6 +130,10 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
+    readonly: {
+        type: Boolean,
+        default: false
+    },
     show: {
         type: Boolean,
         default: false
@@ -149,21 +163,36 @@ const dialogTableVisible = computed({
 })  
 const viewerIndex = ref(0)
 const previewSrcList = computed(() => props.list.map(ele => ele.url))
-const dataList = computed({
-    set(v) {
-		console.log(v)
-        emit('updateData', v)
+const dataList = ref([])
+// computed({
+//     set(v) {
+// 		console.log(v)
+//         emit('updateData', v)
+//     },
+//     get() {
+//         return props.list
+//     }
+// })
+watch(
+    () => props.list,
+    (n) => {
+        dataList.value = n
     },
-    get() {
-        return props.list
+    {
+        immediate: true,
+        deep: true
     }
-})
+)
 const showViewer = ref(false)
 async function open() {
-    
+    dataList.value = props.list
 } 
 
 const showImgView = (item, index) => { 
+    if(item.url.includes('pdf')) {
+        window.open(item.url)
+        return
+    }
     showViewer.value = true 
     viewerIndex.value = index
 }
@@ -175,9 +204,12 @@ const deleteImgView = (item, index) => {
 async function upload(param: any , propName ) {
     // console.log(propName) 
     const formData = new FormData()
-    formData.append('file', param.file)
-    console.log(formData)
-    const res = await $api.upimg(formData)
+    formData.append('file', param.file) 
+    let api = "upimg";
+    if(param.file.type.includes('pdf')) {
+        api = 'uppdf'
+    }
+    const res = await $api[api](formData)
     // console.log(res)
     if (res.code == 1) { 
         // propName[propName.length - 1].url = res.list[0];  
@@ -186,16 +218,16 @@ async function upload(param: any , propName ) {
             url: res.list[0]
         })
         dataList.value = list
-        ElMessage.success('图片上传成功')  
+        ElMessage.success('上传成功')  
         return true
     }
     return false
 }
 const beforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
     //   if (rawFile.type !== 'image/jpeg' ) {
-    // console.log(rawFile.type)
-    if (!/(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(rawFile.type)) {
-        ElMessage.error('图片格式有误！请检查！')
+    console.log(rawFile.type)
+    if (!/(gif|jpg|jpeg|png|pdf|GIF|JPG|PNG|PDF)$/.test(rawFile.type)) {
+        ElMessage.error('文件格式有误！请检查！')
         return false
     } 
     // else if (rawFile.size / 1024 / 1024 > 2) {
@@ -238,11 +270,25 @@ function handleConfirmBtn() {
             &:hover {
                 box-shadow: 0 0 8px rgba(0,0,0,.6);
             }
+            &.no-drag {
+                .image-item {  
+                    cursor: default
+                }
+                .pdf-item { 
+                    cursor: default; 
+                }
+            }
             .image-item { 
                 width: 80px;
                 height: 80px;
                 display: block;
                 cursor: move
+            }
+            .pdf-item {
+                width: 80px;
+                height: 80px; 
+                cursor: move;
+                background-color: #f8f8f8
             }
             .image-icon-w { 
                 width: 100%;

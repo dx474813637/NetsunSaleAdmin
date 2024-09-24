@@ -1,6 +1,7 @@
 import axios from '@/request/index';
 
 
+
 // `memu` 菜单
 export const memu = (data) => axios.get('Userapi/memu1', data) 
 // `memu2` 获取账户权限
@@ -149,6 +150,8 @@ export const down_vouchers_export = (data) => axios.get('Userapi/down_vouchers_e
 export const vouchers_amount = (data) => axios.get('Userapi/vouchers_amount', data)
 // del_vouchers 参数id 在福利券列表，已发送状态下，多一个按钮，撤销 
 export const del_vouchers = (data) => axios.get('Userapi/del_vouchers', data)
+// send_log 发送记录 参数id 福利券id
+export const send_log = (data) => axios.get('Userapi/send_log', data)
 
 
 // order_list1  
@@ -161,3 +164,31 @@ export const product_zone = (data) => axios.get('Userapi/product_zone', data)
 export const product_detail1 = (data) => axios.get('Userapi/product_detail1', data)
 // excel_add 传Excel文件
 export const excel_add = (data, config) => axios.post('Userapi/excel_add', data, config)  
+
+// vouchers_statement_edit 上传发票 参数id 福利提现记录id img发票图片
+export const vouchers_statement_edit = (data, config) => axios.post('Userapi/vouchers_statement_edit', data, config) 
+
+// welfare 福利券申请页
+export const welfare = (data) => axios.get('Userapi/welfare', data)
+// add_welfare 福利券申请提交  参数amount 金额 单位元 img充值凭证图片
+export const add_welfare = (data, config) => axios.post('Userapi/add_welfare', data, config)   
+// welfare_list 福利券申请列表 参数p 
+export const welfare_list = (data) => axios.get('Userapi/welfare_list', data)
+
+// add_invoice 福利券充值发票申请  
+// 参数name公司名称 no纳税人识别号  address地址 tel电话 bank开户行 account银行账号 email邮箱 aid充值记录id
+export const add_invoice = (data, config) => axios.post('Userapi/add_invoice', data, config)  
+// welfare_invoice_list 福利券充值发票列表 参数p
+export const welfare_invoice_list = (data) => axios.get('Userapi/welfare_invoice_list', data)
+
+// coupon_list 优惠活动列表 参数p 接口返回button=1时，显示添加活动的按钮。
+export const coupon_list = (data) => axios.get('Userapi/coupon_list', data)
+// coupon_detail 参数id
+export const coupon_detail = (data) => axios.get('Userapi/coupon_detail', data)
+// coupon_activities_update 创建编辑优惠活动 
+    // 参数id 修改是需要，不传新建。
+    // info 活动介绍 begin 开始时间 end结束时间 前台控制时间大小。 title
+    // full 满 minus 减 单位都是元，正整数。
+    // img 活动背景图片 
+    // num =0 用户无限领 具体数字就是能领几张。
+export const coupon_activities_update = (data, config) => axios.post('Userapi/coupon_activities_update', data, config) 

@@ -11,8 +11,9 @@
         >
         <div class="home-w"> 
             <div class="u-m-b-10 u-flex u-flex-items-center">
-                <el-text type="info">请按照模板表格填写，手机和面额请认真核对。</el-text>
-                <el-button type="danger" plain size="small" @click="downloadBtn">点我下载模板</el-button> 
+                <img src="https://www.sunmaxx.cn/Public/fulizq/jingao.png" height="18" class="u-m-r-5" alt="">
+                <el-text type="danger" class="u-font-16">请按照模板表格填写，手机和面额请认真核对。</el-text>
+                <el-button type="primary" plain size="small" @click="downloadBtn">点我下载模板</el-button> 
             </div>
             <div>
                 <el-upload

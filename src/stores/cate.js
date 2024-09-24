@@ -10,7 +10,7 @@ import {deepClone, initAddressData} from '@/utils/index'
 import router from '@/router/guard'
 import {userStore} from '@/stores/user'
 const user = userStore(pinia)
-const { roleApiName, role } = toRefs(user)
+const { roleApiName, role, showXcxMenus } = toRefs(user)
 // import {
 // 	User, Setting, Handbag, Pointer, Postcard, Files, Box
 // } from "@element-plus/icons-vue";  
@@ -54,7 +54,9 @@ export const cateStore = defineStore('cate', {
 			return cate
 		},
 		menuListAll: (state) => {
-			return filterMenusData(state.menus)
+			let wx = showXcxMenus.value
+			console.log(wx)
+			return filterMenusData(state.menus, wx)
 		},
 	},
 	// 也可以这样定义
@@ -104,14 +106,17 @@ export const cateStore = defineStore('cate', {
 	},
 });
 
-function filterMenusData(data) {
+function filterMenusData(data, wx = 0) {
 	let list = [];
 	data.forEach(ele => {
-		if(ele.role.includes(role.value)) {
-			if(ele.hasOwnProperty('children')) {
-				ele.children = filterMenusData(ele.children)
-			} 
-			list.push(ele)
+		if(ele.role.includes(role.value) ) {
+			if(!wx || (wx == 1 && ele.wx == wx)) {
+				if(ele.hasOwnProperty('children')) {
+					ele.children = filterMenusData(ele.children, wx)
+				} 
+				list.push(ele)
+			}
+			
 		}
 	}) 
 	return list 

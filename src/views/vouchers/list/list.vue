@@ -2,7 +2,7 @@
 <template>
     <div class="box u-p-10 u-radius-15 bg-white "> 
         <voucher-header></voucher-header>
-        <table-vouchers-list isSendBtn :update="update" @sendEvent="sendEvent" @updateBackEvent="updateBackEvent"></table-vouchers-list> 
+        <table-vouchers-list searchShow phoneShow isSendBtn :update="update" @sendEvent="sendEvent" @updateBackEvent="updateBackEvent"></table-vouchers-list> 
         <voucher-send-popup :show="dialogTableVisible" :voucherData="voucherData" @setShow="setShow" @success="successEvent"></voucher-send-popup> 
     </div>
   </template>

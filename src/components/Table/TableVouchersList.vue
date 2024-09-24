@@ -1,4 +1,20 @@
-<template>
+<template> 
+    <div v-if="searchShow">
+        <DiyForm
+            :ddata="diyFormData.data"
+            :form="diyFormData.form"
+            :name="diyFormData.name"
+            :flex="diyFormData.flex"
+            :align="diyFormData.align"
+            :nowDialog="diyFormData"
+            sureText="搜 索"
+            showClear
+            :isView="false"
+            :showCancel="false"  
+            @confirm="onDiyFormConfirm" 
+            @remove="onDiyFormRemove" 
+        ></DiyForm>
+    </div> 
     <el-table 
         v-loading="loading" 
         :data="dataList" 
@@ -17,6 +33,18 @@
         <el-table-column label="用户UID" align="center" prop="login"  v-if="!isSendBtn"></el-table-column> 
         <el-table-column label="卡号" align="center" prop="id" ></el-table-column> 
         <el-table-column label="GUID" align="center" prop="guid" ></el-table-column> 
+        <el-table-column label="手机" align="center" v-if="phoneShow">
+            <template #default="{ row }"> 
+                <div  class="u-p-10" v-if="row.send_phone && row.send_phone.id">
+                    <el-text tag="div" type="info" >
+                        {{ row.send_phone.phone }}
+                    </el-text>
+                </div>
+                <div  class="u-p-10" v-else>
+                    <el-text tag="div" type="info" >暂无记录</el-text>
+                </div> 
+            </template>
+        </el-table-column> 
         <el-table-column label="创建时间" align="center" prop="ctime" ></el-table-column> 
         <!-- <el-table-column label="更新时间" align="center" prop="uptime" ></el-table-column>  -->
         <el-table-column label="状态" align="center" width="100" >
@@ -26,19 +54,21 @@
                 <el-tag type="primary" v-else>未使用</el-tag>
             </template>
         </el-table-column> 
-        <el-table-column label="操作" align="center" width="100" v-if="isSendBtn">
+        <el-table-column label="操作" align="center" width="200" v-if="isSendBtn">
             <template #default="{ row }"> 
-                <el-button type="primary" size="small" v-if="row.zt == 0" @click="handleSendBtn(row)">发送短信</el-button>
-                <el-popconfirm 
-                    title="撤销确认" 
-                    @confirm="handleDelBtn(row)"
-                    confirm-button-text="确认"
-                    cancel-button-text="取消"
-                    >
-                    <template #reference>
-                        <el-button type="danger" size="small" v-if="row.zt == 1" >撤销</el-button> 
-                    </template>
-                </el-popconfirm>
+                <div class="u-flex u-flex-center">
+                    <el-button type="primary" size="small" v-if="row.zt == 0" @click="handleSendBtn(row)">发送短信</el-button>
+                    <el-popconfirm 
+                        title="撤销确认" 
+                        @confirm="handleDelBtn(row)"
+                        confirm-button-text="确认"
+                        cancel-button-text="取消"
+                        >
+                        <template #reference>
+                            <el-button type="danger" size="small" v-if="row.zt == 0 || row.zt == 1" >撤销</el-button> 
+                        </template>
+                    </el-popconfirm>
+                </div>
                 
             </template>
         </el-table-column> 
@@ -94,7 +124,15 @@ const props = defineProps({
         type: String,
         default: 'vouchers'
     },
+    phoneShow: {
+        type: Boolean,
+        default: false
+    },
     isSendBtn: {
+        type: Boolean,
+        default: false
+    },
+    searchShow: {
         type: Boolean,
         default: false
     },
@@ -116,9 +154,32 @@ const total = ref(0)
 const pageSize = ref(20)
 const paramsObj = computed(() => {
     return {
-        p: curP.value
+        p: curP.value,
+        ...diyFormData.data,
     }
 })
+let diyFormData = reactive({
+    title: "title", 
+    name: "vouchersFilterForm",
+    name2: "vouchersFilterForm2",
+    show: true,
+    data: {
+        phone: ''
+    },
+    flex: 'row',
+    align: 'start',
+    form: 
+    [
+        {
+            label: "手机",
+            el: "input",
+            prop: "phone",
+            class: 'width-auto',
+            place: "手机", 
+            required: false
+        },  
+    ], 
+}) 
 const defaultProps = {
   children: 'children',
   label: 'label',
@@ -167,41 +228,7 @@ const handleCurrentTableChange = (val: User | undefined) => {
     if(!props.isRadioGroup) return 
     currentRow.value = val
 }
-
-const beforeProdOnChange = async (item) => {
-    item.switchLoading = true  
-    return new Promise(async (resolve, reject)=>{
-        
-        let res = await changeProductOnStatus(item) 
-        item.switchLoading = false
-        if(res.code == 1) { 
-            ElNotification({
-                title: '系统消息',
-                message: res.msg,
-                type: 'success',
-                position: 'bottom-right',
-            })
-            return resolve(true)
-        }else { 
-            ElNotification({
-                title: '系统消息',
-                message: res.msg,
-                type: 'success',
-                position: 'bottom-right',
-            })
-            return resolve(false)
-        } 
-    })
-    
-}
-function download(src) {
-    window.open(src)
-}
-const changeProductOnStatus = async (prod) => { 
-    const res = await $api.change_product_status({params: {id: prod.id}}); 
-    return res
-}
-
+  
 function handleSendBtn(data) {
     emit('sendEvent', {data})
 }
@@ -217,9 +244,35 @@ async function handleDelBtn(data) {
             position: 'bottom-right',
         })
     }
+} 
+// async function getPhoneNumber(data) {
+//     if(data.getPhoneLoading) return
+//     data.getPhoneLoading = true
+//     try { 
+//         const res = await $api.send_log({params: {id: data.id}}); 
+//         if(res.code == 1) {
+//             let i = dataList.value.findIndex(ele => ele.id == data.id);
+//             if(i != -1 ) {
+//                 dataList.value[i].phone = res.list
+//             }
+//         }
+//     } catch (error) {
+        
+//     }
+//     data.getPhoneLoading = false
+// }
+async function onDiyFormRemove() {
+    loading.value = true; 
+    await getData()
+    loading.value = false;
 }
-
-
+async function onDiyFormConfirm(e) { 
+    if(e.data.id) tabs_value.value = ''
+   
+    loading.value = true; 
+    await getData()
+    loading.value = false;
+}
 </script>
 <style lang='scss' scoped>  
 @import "@/styles/table.scss";

@@ -33,6 +33,10 @@ export default (({ mode }) => {
 					//简单来说，就是是否改路径 加某些东西
 					// rewrite: (path) => path.replace(/^\/tqapi/, '')
 				},
+				'/Apilogin': {  
+					target: 'https://wstm.y.netsun.com/', 
+					changeOrigin: true, 
+				},
 			}
 		},
 		css: {

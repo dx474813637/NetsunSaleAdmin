@@ -4,6 +4,19 @@ import axios from '@/request/index';
 // 选品中心  用户后台appid。
 // https://doudian.y.netsun.com/Userapi/
 
+
+// get_code_login 登录获取验证码 参数phone 
+export const get_code_login = (data) => axios.get('Apilogin/get_code_login', {...data, headers: {wx: 1}}) 
+// login 登录 username账号password密码 或者 phone手机code验证码 返回的list就是cookie
+export const login = (data) => axios.get('Apilogin/login', {...data, headers: {wx: 1}}) 
+// get_code 注册获取验证码 参数phone
+export const reg_get_code = (data) => axios.get('Apilogin/get_code', {...data, headers: {wx: 1}}) 
+// reg_handle 注册并返回登录cookie 返回的list就是cookie
+// 把返回的cookie 赋值给sunmaxx_st_company
+export const reg_handle = (data) => axios.get('Apilogin/reg_handle', {...data, headers: {wx: 1}}) 
+
+
+
 // syblogin   生意宝账号登录 参数login passwd msgcode role=13卖家,14买家
 // 有账号密码登录  账号验证码登录  账号验证码注册
 export const syblogin = (data) => axios.get('Userapi/syblogin', data) 
@@ -31,6 +44,8 @@ export const web_pid_sku = (data) => axios.get('Userapi/web_pid_sku', data)
 export const web_pid_sku1 = (data) => axios.get('Userapi/web_pid_sku1', data) 
 // upimg 上传图片
 export const upimg = (data, config) => axios.post('Userapi/upimg', data, config) 
+// uppdf 上传PDF
+export const uppdf = (data, config) => axios.post('Userapi/uppdf', data, config) 
 // upimg 上传图片 edit
 export const upimg1 = (data, config) => axios.post('Userapi/upimg1', data, config) 
 // upimg 上传图片 sku
