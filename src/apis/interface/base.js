@@ -61,7 +61,7 @@ export const del_product = (data) => axios.get('Userapi/del_product', data)
 
 // save_product 保存商品 
     // 参数：`id 有id更新没有id新增`,`name`, `cate分类id`, `price`, `pic`商品轮播图, `description商品描述，目前只支持图片。多张图片用|分开。
-    // 这个是抖店的详情`, `recommend_remark商家推荐语`, `freight_id运费模板id，传0表示包邮`, `weight重量`, `num` 起批数 批发价`pprice`
+    // 这个是抖店的详情`, `recommend_remark商家推荐语`, `freight_id运费模板id，传0表示包邮`, `weight重量`, `num` 起批数 拼团价`pprice`
     // `weight_unit重量单位，0-kg, 1-g`, `delivery_delay_day承诺发货时间，单位是天`, `info富文本详情`, 
     // `zt`, `on上架1下架0`，spec_prices=json格式的sku specs=颜色|红色,黑色^尺码|S,M，
     // 这两个参数就在新增时接受，编辑时不接口。如果只编辑库存，直接在详情接口里面根据库存列表编辑，不需要编辑商品信息。
@@ -158,6 +158,15 @@ export const uid_bind_handle = (data) => axios.get('Userapi/uid_bind_handle', da
 export const tuan_list = (data) => axios.get('Userapi/tuan_list', data)
 // shop_list 员工发展商家列表 参数p uid
 export const shop_list = (data) => axios.get('Userapi/shop_list', data)
+ 
+// 商家绑定社区团长接口
+// get_code1 发送验证码 参数uid
+export const get_code1 = (data) => axios.get('Userapi/get_code1', data)
+// uid_bind_handle1 社区团长绑定 参数uid code
+export const uid_bind_handle1 = (data) => axios.get('Userapi/uid_bind_handle1', data)
+// personnel_list1 社区团长列表 参数p
+export const personnel_list1 = (data) => axios.get('Userapi/personnel_list1', data)
+// 可以直接复制绑定员工，参数也一致的。
 
 // shop_order_list 发展商家有效订单列表 参数p uid员工id login商家账号。
 // 商家账号参数优先级高于UID，有商家账号参数了，传UID就无效。 

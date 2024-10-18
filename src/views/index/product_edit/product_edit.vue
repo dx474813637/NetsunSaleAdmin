@@ -117,6 +117,28 @@
        
         <el-row :gutter="20" v-if="editMode == '1'">
             <el-col :span="8" :xs="24">
+                <el-form-item prop="weight" label="成团数" required :rules="{
+                        validator: (rule: any, value: any, callback: any) => {
+                            if (value == '' || value == 0) {
+                                callback('成团数不能为空')
+                            }else {
+                                callback()
+                            }
+                        }, 
+                        trigger: ['blur', 'change'],
+                    }">
+                    <el-input v-model="dynamicValidateForm.weight" placeholder="请输入成团数" />
+                </el-form-item>
+            </el-col>
+            <el-col :span="8" :xs="24">
+                <el-form-item label="其他">
+                    <el-button type="primary" @click="router.push({name: 'product_edit', params:{id: id}})">查看商品基础信息</el-button>
+                </el-form-item>
+               
+            </el-col>
+        </el-row>
+        <el-row :gutter="20" v-if="editMode == '2'">
+            <el-col :span="8" :xs="24">
                 <el-form-item prop="num" label="起批数" required :rules="{
                         validator: (rule: any, value: any, callback: any) => {
                             if (value == '' || value == 0) {
@@ -141,8 +163,8 @@
     
         <!-- <el-row :gutter="20">
             <el-col :span="8" :xs="24">
-                <el-form-item prop="pprice" label="批发价(批发平台需要，非必填)">
-                    <el-input v-model="dynamicValidateForm.pprice" placeholder="请输入批发价" />
+                <el-form-item prop="pprice" label="拼团价(拼团平台需要，非必填)">
+                    <el-input v-model="dynamicValidateForm.pprice" placeholder="请输入拼团价" />
                 </el-form-item>
             </el-col>
         </el-row> -->
@@ -287,7 +309,7 @@
                 v-for="(item, index) in dynamicValidateForm.attribute"
                 :key="item.id"
                 > 
-                <el-col :span="8"  class="u-flex u-flex-items-start">
+                <el-col :span="8" :xs="24"  class="u-flex u-flex-items-start">
                     <el-button
                         type="danger"
                         class="u-m-r-10" 
@@ -308,7 +330,7 @@
                     </el-form-item>
                     
                 </el-col>
-                <el-col :span="16">
+                <el-col :span="16" :xs="24">
                     <el-form-item  
                         label="" 
                         :prop="'attribute.' + index + '.value'" 
@@ -990,6 +1012,11 @@ const modeConfig = computed(() => {
         sku_goods_text: '商品名称',
     }
     if(editMode.value == '1') {
+        obj.sku_sale_price_text = '拼团价'
+        obj.sku_pick_price_text = '拼团供货价'
+        obj.sku_goods_text = '拼团商品名称'
+    }
+    else if(editMode.value == '2') {
         obj.sku_sale_price_text = '批发价'
         obj.sku_pick_price_text = '批发供货价'
         obj.sku_goods_text = '批发商品名称'

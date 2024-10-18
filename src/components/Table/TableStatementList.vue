@@ -52,7 +52,7 @@
                             size="small" 
                             plain 
                             @click="showPopup(row)"
-                        >{{ row.fileList.length }}个文件 - {{ currentRow.zt == 1? '管理' : '预览' }}</el-button>
+                        > {{ currentRow.zt == 1? '管理' : '预览' }}{{ row.fileList.length }}个文件(点击上传发票)</el-button>
                         <!-- <el-image
                             v-if="row.img"
                             class="u-radius-5 u-m-r-6 box-border"

@@ -213,6 +213,18 @@ const routes = [
                 component: () => import('@/views/index/order_list/order_list.vue'),
             }, 
             {
+                path: 'order_list2',
+                query: {
+                    cate: '2'
+                },
+                name: 'order_list2',
+                meta: {
+                    title: '社区团购订单', 
+                    role: [1, 2, 3, 4] 
+                },
+                component: () => import('@/views/index/order_list/order_list.vue'),
+            }, 
+            {
                 path: 'service_list',
                 name: 'service_list',
                 meta: {
@@ -266,6 +278,24 @@ const routes = [
                     role: [1, 2, 3], 
                 },
                 component: () => import('@/views/operate/workers_add/workers_add2.vue'),
+            },
+            {
+                path: 'community_list',
+                name: 'community_list',
+                meta: {
+                    title: '社区团长管理', 
+                    role: [1, 2, 3],
+                },
+                component: () => import('@/views/index/community_list/community_list.vue'),
+            },
+            {
+                path: 'community_add',
+                name: 'community_add',
+                meta: {
+                    title: '社区团长绑定', 
+                    role: [1, 2, 3], 
+                },
+                component: () => import('@/views/index/community_add/community_add.vue'),
             },
             {
                 path: 'out_pay_bind',

@@ -169,6 +169,13 @@ const addBtnList = [
 			name: 'welfare'
 		}
 	}, 
+	{
+		name: 'community_list',
+		title: '社区团长绑定',
+		to: {
+			name: 'community_add'
+		}
+	}, 
 ]
 onMounted(async () => {
 	// cate.getWarehouseData() 

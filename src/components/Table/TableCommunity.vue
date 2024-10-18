@@ -186,7 +186,7 @@ watch(
 let uploadRefs2: any = [] 
 
 const getData = async () => { 
-    const res = await $api.personnel_list({params: paramsObj.value, loading: false})
+    const res = await $api.personnel_list1({params: paramsObj.value, loading: false})
     if(res.code == 1) {
         console.log(res)
         dataList.value = res.list 
@@ -237,7 +237,7 @@ const changeProductOnStatus = async (prod) => {
 
 </script>
 <style lang='scss' scoped> 
-@import '@/styles/operate.scss';
+@import "@/styles/table.scss";
 // 
 .el-tree {
     background-color: transparent;

@@ -172,10 +172,11 @@
                     </div>
                 </template>
             </el-table-column> -->
-            <el-table-column label="操作"  :fixed="isH5? false :'right'" width="140" align="center" v-if="isEditBtn"> 
+            <el-table-column label="操作"  :fixed="isH5? false :'right'" width="160" align="center" v-if="isEditBtn"> 
                 <template #default="{row}">
                     
-                    <div class="u-flex-column u-flex-center" >
+                    <!-- <div class="u-flex-column u-flex-center" > -->
+                    <div class="u-flex u-flex-wrap" >
                         <div class="u-p-5">
                             <el-button 
                                 link 
@@ -190,6 +191,14 @@
                                 type="primary" 
                                 size="small" 
                                 @click="router.push({name: 'product_edit', params: {id: row.id},query:{mode: '1'}})"
+                                >拼团编辑</el-button> 
+                        </div>
+                        <div class="u-p-5">
+                            <el-button 
+                                link  
+                                type="primary" 
+                                size="small" 
+                                @click="router.push({name: 'product_edit', params: {id: row.id},query:{mode: '2'}})"
                                 >批发编辑</el-button> 
                         </div>
                         <div class="u-p-5">

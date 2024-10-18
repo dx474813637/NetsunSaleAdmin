@@ -26,7 +26,8 @@
 </template>
   
 <script setup lang='ts'>
-import { computed, ref, inject } from 'vue'
+import { computed, ref, inject, watch } from 'vue'
+import router from "@/router/guard" 
 const $api: any = inject('$api')
 // const tabs_list = ref([
 // 	{ label: '全部状态', value: '' },
@@ -47,8 +48,20 @@ const $api: any = inject('$api')
 // const role = ref('');
 const customParams = computed(() => {
 	return { 
+		cate: cate.value
 	}
 })
+const cate = ref('')
+watch(
+	() => router.currentRoute.value.query,
+	(n) => {  
+		if(n.hasOwnProperty('cate')) cate.value = n.cate
+	},
+	{
+		immediate: true,
+		deep: true
+	}
+)
 const detail_id = ref('');
 const no = ref('');
 const dialogTableVisible = ref(false);

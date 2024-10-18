@@ -11,6 +11,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AddVoucherPopup: typeof import('./src/components/Popup/addVoucherPopup.vue')['default']
     AddWelfareInvoicePopup: typeof import('./src/components/Popup/addWelfareInvoicePopup.vue')['default']
+    copy: typeof import('./src/components/Table/TableWorkers copy.vue')['default']
     DiyForm: typeof import('./src/components/DiyForm/DiyForm.vue')['default']
     DiyFormItems: typeof import('./src/components/DiyForm/DiyFormItems.vue')['default']
     Editor: typeof import('./src/components/Editor/Editor.vue')['default']
@@ -95,6 +96,7 @@ declare module '@vue/runtime-core' {
     TableBankList: typeof import('./src/components/Table/TableBankList.vue')['default']
     TableBondList: typeof import('./src/components/Table/TableBondList.vue')['default']
     TableBondListAdmin: typeof import('./src/components/Table/TableBondListAdmin.vue')['default']
+    TableCommunity: typeof import('./src/components/Table/TableCommunity.vue')['default']
     TableCoupon: typeof import('./src/components/Table/TableCoupon.vue')['default']
     TableExpress: typeof import('./src/components/Table/TableExpress.vue')['default']
     TableOrder: typeof import('./src/components/Table/TableOrder.vue')['default']
