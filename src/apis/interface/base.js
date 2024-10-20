@@ -222,3 +222,9 @@ export const edit_address2 = (data, config) => axios.post('Userapi/edit_address2
 // order_express_create 生成电子面单 参数 id订单id wuliu物流配置里的id  
 // 订单状态为1付款成功和8发货中有这个按钮，现在就直接返回数据，没有真实提交，可以随便测试。
 export const order_express_create = (data) => axios.get('Userapi/order_express_create', data)
+
+
+// address_list 自提点列表 参数p
+export const address_list = (data) => axios.get('Userapi/adress_list', data)
+// address_shenhe 自提点审核 参数id 自提点id sh1通过 2拒绝
+export const address_shenhe = (data) => axios.get('Userapi/adress_shenhe', data)

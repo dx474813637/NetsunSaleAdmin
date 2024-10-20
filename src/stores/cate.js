@@ -10,7 +10,7 @@ import {deepClone, initAddressData} from '@/utils/index'
 import router from '@/router/guard'
 import {userStore} from '@/stores/user'
 const user = userStore(pinia)
-const { roleApiName, role, showXcxMenus } = toRefs(user)
+const { roleApiName, role, showXcxMenus, communityRole } = toRefs(user)
 // import {
 // 	User, Setting, Handbag, Pointer, Postcard, Files, Box
 // } from "@element-plus/icons-vue";  
@@ -55,8 +55,12 @@ export const cateStore = defineStore('cate', {
 		},
 		menuListAll: (state) => {
 			let wx = showXcxMenus.value
-			console.log(wx)
-			return filterMenusData(state.menus, wx)
+			let community = communityRole.value
+			let roleObj = {
+				wx,
+				community
+			} 
+			return filterMenusData(state.menus, roleObj)
 		},
 	},
 	// 也可以这样定义
@@ -106,13 +110,32 @@ export const cateStore = defineStore('cate', {
 	},
 });
 
-function filterMenusData(data, wx = 0) {
+function filterMenusData(data, roleObj) {
 	let list = [];
+	let {
+		wx,
+		community
+	} = roleObj
 	data.forEach(ele => {
+		let flag = true
 		if(ele.role.includes(role.value) ) {
-			if(!wx || (wx == 1 && ele.wx == wx)) {
+			
+			if(ele.hasOwnProperty('community') && community != 1) {
+				flag = false
+			} 
+			console.log(ele.label, wx, ele.hasOwnProperty('wx'), ele.wx)
+			if((wx == 1 && !ele.hasOwnProperty('wx')) || (wx == 1 && ele.wx != wx)) {
+				flag = false
+			}
+			// if(!wx || (wx == 1 && ele.wx == wx)) {
+			// 	if(ele.hasOwnProperty('children')) {
+			// 		ele.children = filterMenusData(ele.children, wx)
+			// 	} 
+			// 	list.push(ele)
+			// }
+			if( flag ) {
 				if(ele.hasOwnProperty('children')) {
-					ele.children = filterMenusData(ele.children, wx)
+					ele.children = filterMenusData(ele.children, roleObj)
 				} 
 				list.push(ele)
 			}

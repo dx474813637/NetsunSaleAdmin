@@ -63,7 +63,8 @@ export const userStore = defineStore('user', {
 			subAccount: [],
 			showMenus: 0,
 			showVouchersMenus: 0,
-			showXcxMenus: 0
+			showXcxMenus: 0,
+			communityRole: 0
 		};
 	},
 	getters: {
@@ -90,6 +91,7 @@ export const userStore = defineStore('user', {
 				this.showMenus = res.role_vouchers
 				this.showVouchersMenus = res.role_vouchers2
 				this.showXcxMenus = res.role_xcx
+				this.communityRole = res.role_xcx2
 			}
 		},
 		async getSubAccData(needLoading = false) {

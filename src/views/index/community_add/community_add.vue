@@ -12,7 +12,7 @@
             > 
             <el-row>
                 <el-col :span="12" :xs="24">
-                    <el-form-item label="员工UID" prop="uid">
+                    <el-form-item label="团长UID" prop="uid">
                         <el-input  
                             v-model="dynamicValidateForm.uid"  
                             autocomplete="off" 
@@ -97,7 +97,7 @@ const dynamicValidateForm = reactive<{
 const rules = reactive<FormRules<typeof ruleForm>>({
     uid: [{
         required: true,
-        message: '员工UID不能为空',
+        message: '团长UID不能为空',
         trigger: ['change', 'blur'],
     }], 
     code: [{
@@ -116,7 +116,7 @@ async function getCodeBtn() {
     if(getCodeLoading.value) return
     getCodeLoading.value = true
     try {
-        const res = await $api.get_code({
+        const res = await $api.get_code1({
             params: {
                 uid: dynamicValidateForm.uid
             },
@@ -155,7 +155,7 @@ function submitForm(formEl: FormInstance | undefined) {
  
 
 async function submitApi(data) { 
-    const res = await $api.uid_bind_handle({
+    const res = await $api.uid_bind_handle1({
         params: {
             ...data
         }
@@ -163,7 +163,7 @@ async function submitApi(data) {
     if(res.code == 1) {
         ElMessage.success(res.msg)
         router.push({
-            name: 'workers_list'
+            name: 'community_list'
         })
     }
 }

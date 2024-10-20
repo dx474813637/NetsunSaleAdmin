@@ -280,11 +280,22 @@ const routes = [
                 component: () => import('@/views/operate/workers_add/workers_add2.vue'),
             },
             {
+                path: 'address_list',
+                name: 'address_list',
+                meta: {
+                    title: '自提点管理', 
+                    role: [1, 2, 3],
+                    community: true,
+                },
+                component: () => import('@/views/index/address_list/address_list.vue'),
+            }, 
+            {
                 path: 'community_list',
                 name: 'community_list',
                 meta: {
                     title: '社区团长管理', 
                     role: [1, 2, 3],
+                    community: true,
                 },
                 component: () => import('@/views/index/community_list/community_list.vue'),
             },
@@ -294,6 +305,7 @@ const routes = [
                 meta: {
                     title: '社区团长绑定', 
                     role: [1, 2, 3], 
+                    community: true,
                 },
                 component: () => import('@/views/index/community_add/community_add.vue'),
             },
