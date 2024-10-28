@@ -46,16 +46,18 @@ const $api: any = inject('$api')
 // ])
 // const value = ref('');
 // const role = ref('');
+const cate = ref('')
 const customParams = computed(() => {
 	return { 
 		cate: cate.value
 	}
 })
-const cate = ref('')
 watch(
-	() => router.currentRoute.value.query,
+	() => router.currentRoute.value.name,
 	(n) => {  
-		if(n.hasOwnProperty('cate')) cate.value = n.cate
+		if(n == 'order_list2') {
+			cate.value = '1'
+		} 
 	},
 	{
 		immediate: true,

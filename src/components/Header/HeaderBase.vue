@@ -4,8 +4,8 @@
         <div class="header-main">
             <div class="home-w">
                 <div class="main-logo">
-                    <a href="#/" title="网盛特卖"><img src="/logo.png"
-                            class="logo" alt="网盛特卖"></a>
+                    <a href="#/" title="SunMaxx新零售联盟"><img src="/logo.png"
+                            class="logo" alt="SunMaxx新零售联盟"></a>
                 </div>
                 <div class="main-search u-flex-1 u-flex u-flex-items-center">
                     <div class="search-w u-flex-1">

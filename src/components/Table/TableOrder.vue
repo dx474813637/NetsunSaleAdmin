@@ -74,7 +74,8 @@
                         <el-text type="info" >更新时间：{{ row.uptime }}</el-text>  
                     </div> 
                     <div v-if="row.express" class="u-m-b-5">
-                        <el-text type="success" tag="a" style="cursor: pointer" @click="handleExpressClick(row)">物流单号：{{ row.express }}</el-text>   
+                        <el-text type="success" tag="a" style="cursor: pointer" @click="handleExpressClick(row)" v-if="customParams.cate != 1">物流单号：{{ row.express }}</el-text> 
+                        <el-text type="success" v-else >{{ row.express }}</el-text>   
                     </div> 
                     <div>
                         <el-text type="info" >{{ row.company }}</el-text>  
@@ -93,7 +94,7 @@
                 </template> 
             </el-table-column>  
             <!-- <el-table-column prop="ctime" label="创建时间" width="200" /> -->
-            <el-table-column label="操作" width="120" align="center" > 
+            <el-table-column label="操作" width="120" align="center" v-if="customParams.hasOwnProperty('cate') && customParams.cate != '1'" > 
                 <template #default="{row}">
                     <div class="u-p-5" v-if="row.status == '1'">
                         <el-popconfirm 

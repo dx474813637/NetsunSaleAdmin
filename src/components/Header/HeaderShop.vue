@@ -6,8 +6,8 @@
                 <div class="main-logo u-flex u-flex-1">
                     
                     <template v-if="props.info.login">
-                        <a href="#/" title="网盛特卖">
-                            <!-- <img :src="props.info.img"  class="logo" alt="网盛特卖"> -->
+                        <a href="#/" title="SunMaxx新零售联盟">
+                            <!-- <img :src="props.info.img"  class="logo" alt="SunMaxx新零售联盟"> -->
                             <el-image :src="props.info.img" fit="cover" class="logo" >
                                 <template #placeholder>
                                     <div class="u-flex u-flex-center"> 
@@ -47,8 +47,8 @@
                         </div>
                     </template>
                     <template v-else>
-                        <a href="#/" title="网盛特卖">
-                            <img src="/logo.png"  class="logo" alt="网盛特卖">
+                        <a href="#/" title="SunMaxx新零售联盟">
+                            <img src="/logo.png"  class="logo" alt="SunMaxx新零售联盟">
                         </a>
                     </template>
                     

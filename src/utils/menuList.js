@@ -219,6 +219,56 @@
 		]
 	}, 
 	{
+		"label": "社区团购管理",
+		"type": "title", 
+		"index": "sqtg",
+		"role": "[1, 2, 3, 4]", 
+		"community": "1",
+		"icon": "icon-kehuguanli",
+		"children": [
+			{
+				"label": "团长管理", 
+				"icon": "", 
+				"index": "community_list", 
+				"community": "1",
+				"role": "[1, 2, 3]", 
+				"route": {
+					"name": "community_list"
+				} 
+			},
+			{
+				"label": "自提点管理", 
+				"icon": "", 
+				"index": "address_list", 
+				"community": "1",
+				"role": "[1, 2, 3]", 
+				"route": {
+					"name": "address_list"
+				} 
+			},
+			{
+				"label": "发货清单", 
+				"icon": "", 
+				"index": "community_goods_list", 
+				"community": "1",
+				"role": "[1, 2, 3]", 
+				"route": {
+					"name": "community_goods_list"
+				} 
+			},
+			{
+				"label": "订单管理", 
+				"icon": "", 
+				"index": "order_list2", 
+				"community": "1",
+				"role": "[1, 2, 3]", 
+				"route": {
+					"name": "order_list2"
+				} 
+			}
+		]
+	}, 
+	{
 		"label": "优惠活动管理",
 		"type": "title", 
 		"index": "yhhd",

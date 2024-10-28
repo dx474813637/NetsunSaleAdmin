@@ -8,7 +8,7 @@
             <div class="u-p-8  u-radius-8 u-p-l-15 u-p-r-15 u-m-b-14" style="background-image: linear-gradient(to bottom, #FAFBFF, #DBE4F9);">
                 <el-text class="u-font-16" style="color: #000;">向网盛跨境采购福利券总额度后，可点击右上角</el-text>
                 <el-text class="u-font-16" type="primary">【企业福利】</el-text>
-                <el-text class="u-font-16" style="color: #000;">菜单，可将福利券额切分并发送给对方，对方获得福利券卡密绑定，即可在网盛特卖“企福区"随心购物。</el-text>
+                <el-text class="u-font-16" style="color: #000;">菜单，可将福利券额切分并发送给对方，对方获得福利券卡密绑定，即可在SunMaxx新零售联盟“企福区"随心购物。</el-text>
                 
             </div>
 

@@ -63,7 +63,7 @@ export const del_product = (data) => axios.get('Userapi/del_product', data)
     // 参数：`id 有id更新没有id新增`,`name`, `cate分类id`, `price`, `pic`商品轮播图, `description商品描述，目前只支持图片。多张图片用|分开。
     // 这个是抖店的详情`, `recommend_remark商家推荐语`, `freight_id运费模板id，传0表示包邮`, `weight重量`, `num` 起批数 拼团价`pprice`
     // `weight_unit重量单位，0-kg, 1-g`, `delivery_delay_day承诺发货时间，单位是天`, `info富文本详情`, 
-    // `zt`, `on上架1下架0`，spec_prices=json格式的sku specs=颜色|红色,黑色^尺码|S,M，
+    // `zt`, `on上架1下架0`，spec_prices=json格式的sku specs=颜色|红色,黑色^尺码|S,M， gp 社区团购 =0 否 1是
     // 这两个参数就在新增时接受，编辑时不接口。如果只编辑库存，直接在详情接口里面根据库存列表编辑，不需要编辑商品信息。
 export const save_product = (data, config) => axios.post('Userapi/save_product', data, config) 
 // spec_prices的格式

@@ -14,7 +14,7 @@ router.beforeEach(async (to, from, next) => {
     const finance = useFinanceStore(pinia)
     const cate = cateStore(pinia)
     const {account_info} = toRefs(finance)
-    const {cpy_info, role} = toRefs(user)
+    const {cpy_info, role, communityRole} = toRefs(user)
     const { router_mode, menus } = toRefs(cate)
     
     start()
@@ -72,6 +72,10 @@ router.beforeEach(async (to, from, next) => {
     
     
     if(to?.meta?.role && !to.meta.role.includes(role.value) ) {
+        next(from)
+        return
+    }
+    if(to?.meta?.community && communityRole.value != 1) {
         next(from)
         return
     }

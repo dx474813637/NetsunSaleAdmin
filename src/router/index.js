@@ -32,6 +32,15 @@ const routes = [
                 component: () => import('@/views/index/product_list/product_list.vue'),
             },
             {
+                path: 'applyments',
+                name: 'applyments',
+                meta: {
+                    title: '商户申请',  
+                    role: [1, 2, 3], 
+                },
+                component: () => import('@/views/index/applyments/applyments.vue'),
+            },
+            {
                 path: 'bond_list',
                 name: 'bond_list',
                 meta: {
@@ -213,18 +222,6 @@ const routes = [
                 component: () => import('@/views/index/order_list/order_list.vue'),
             }, 
             {
-                path: 'order_list2',
-                query: {
-                    cate: '2'
-                },
-                name: 'order_list2',
-                meta: {
-                    title: '社区团购订单', 
-                    role: [1, 2, 3, 4] 
-                },
-                component: () => import('@/views/index/order_list/order_list.vue'),
-            }, 
-            {
                 path: 'service_list',
                 name: 'service_list',
                 meta: {
@@ -288,6 +285,29 @@ const routes = [
                     community: true,
                 },
                 component: () => import('@/views/index/address_list/address_list.vue'),
+            }, 
+            {
+                path: 'order_list2',
+                query: {
+                    cate: '1'
+                },
+                name: 'order_list2',
+                meta: {
+                    title: '社区团购订单', 
+                    role: [1, 2, 3, 4],
+                    community: true,
+                },
+                component: () => import('@/views/index/order_list/order_list.vue'),
+            }, 
+            {
+                path: 'community_goods_list',
+                name: 'community_goods_list',
+                meta: {
+                    title: '发货清单', 
+                    role: [1, 2, 3],
+                    community: true,
+                },
+                component: () => import('@/views/index/community_goods_list/community_goods_list.vue'),
             }, 
             {
                 path: 'community_list',

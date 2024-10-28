@@ -292,6 +292,12 @@
         <!-- <el-form-item prop="info" label="富文本详情">
             <el-input v-model="dynamicValidateForm.info" />
         </el-form-item> -->
+        <el-form-item prop="gp" label="社区团购" v-if="!editMode && communityRole"> 
+            <el-radio-group v-model="dynamicValidateForm.gp">
+                <el-radio label="1">是</el-radio>
+                <el-radio label="0">否</el-radio> 
+            </el-radio-group>
+        </el-form-item>
         <el-form-item prop="on" label="是否上架" v-if="!editMode"> 
             <el-radio-group v-model="dynamicValidateForm.on">
                 <el-radio label="1">上架</el-radio>
@@ -733,7 +739,7 @@ const settings = useSettingsStore()
 const { isH5 } = toRefs(settings)
 import { userStore } from '@/stores/user' 
 const user = userStore()
-const { cpy_info, subAccount } = toRefs(user)
+const { cpy_info, subAccount, communityRole } = toRefs(user)
 const {
     skuTable2domains,
     sku2domains
@@ -794,6 +800,7 @@ const dynamicValidateForm = reactive<{
     warehouse: string
     pprice: string
     num: number
+    gp: string
     // divide: number
     // zt: string
     // spec_prices: string
@@ -807,6 +814,7 @@ const dynamicValidateForm = reactive<{
     price2: '',
     pprice: '',
     num: 0,
+    gp: "0",
     pic: [],
     description: [],
     recommend_remark: '',
@@ -1006,6 +1014,7 @@ watch(
     }
 )
 const modeConfig = computed(() => {
+    console.log(editMode.value)
     let obj = {
         sku_sale_price_text: '特卖价',
         sku_pick_price_text: '供货价',
@@ -1491,6 +1500,7 @@ async function getProductData () {
         dynamicValidateForm.on = data.on 
         dynamicValidateForm.ewm = data.ewm 
         dynamicValidateForm.price = data.price 
+        dynamicValidateForm.gp = data.gp || "0"
         dynamicValidateForm.goods_no = data.goods_no 
         dynamicValidateForm.recommend_remark = data.recommend_remark 
         dynamicValidateForm.weight = data.weight 

@@ -123,7 +123,7 @@ function filterMenusData(data, roleObj) {
 			if(ele.hasOwnProperty('community') && community != 1) {
 				flag = false
 			} 
-			console.log(ele.label, wx, ele.hasOwnProperty('wx'), ele.wx)
+			// console.log(ele.label, wx, ele.hasOwnProperty('wx'), ele.wx)
 			if((wx == 1 && !ele.hasOwnProperty('wx')) || (wx == 1 && ele.wx != wx)) {
 				flag = false
 			}

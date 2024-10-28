@@ -1,0 +1,151 @@
+<template> 
+    <!-- <el-row>
+        <el-text type="danger" size="small">可多个关键字配合空格模糊搜索如：“杭州 工商 西湖”</el-text>
+    </el-row> -->
+    <el-row :gutter="20" class="u-m-b-10">
+        <el-col :span="16" :xs="16">
+            <el-input 
+                v-model="terms"   
+                clearable 
+                placeholder="关键字检索银行"
+            />
+        </el-col>
+        <el-col :span="8" :xs="8">
+            <el-button type="primary" @click="refreshData">搜索</el-button>
+        </el-col>
+    </el-row>
+    <el-table 
+        v-loading="loading" 
+        :data="dataList" 
+        style="width: 100%"  
+        :maxHeight="maxHeight"
+        :highlight-current-row="isRadioGroup"
+        @current-change="handleCurrentTableChange"
+        > 
+        <el-table-column label="ID" :width="80" >
+            <template #default="{ row }">
+                <div class="u-flex">
+                    <span>{{ row.id }}</span> 
+                    <span class="u-m-l-10" v-if="isRadioGroup && currentRow && currentRow.id == row.id ">
+                        <el-Icon color="#ff0000">
+                            <i-ep-CircleCheck></i-ep-CircleCheck>
+                        </el-Icon>
+                    </span>
+                </div>
+                
+            </template>
+        </el-table-column>
+        <el-table-column prop="account_bank" label="银行名称" />   
+        <el-table-column prop="bank_alias" label="银行别称" />   
+        <template #empty>
+            <div class="u-flex u-flex-center u-p-t-20 u-p-b-20">
+                <el-empty description="无数据" />
+            </div>
+        </template>
+    </el-table>
+    <div class="list-page-box u-p-t-20 u-p-b-20">
+        <el-pagination
+            v-model:current-page="curP"
+            :page-size="pageSize"
+            small
+            background
+            layout="prev, pager, next, slot"
+            :total="total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+        >
+            <span class="u-p-l-10">共 {{ total }} 条数据</span>
+        </el-pagination>
+    </div> 
+</template>
+
+<script setup lang='ts'>
+import { reactive,ref,computed, inject, onMounted } from 'vue'
+import router from "@/router/guard" 
+import { ElMessage } from "element-plus";
+import { deepClone } from '@/utils';
+import useProductSku from '@/hook/useProductSku'
+const {
+    sku2treeData
+} = useProductSku()
+const props = defineProps({
+    isSearchBar: {
+        type: Boolean,
+        default: false
+    },
+    isRadioGroup: {
+        type: Boolean,
+        default: false
+    },
+    isEditBtn: {
+        type: Boolean,
+        default: false
+    },
+    maxHeight: {
+        type: [String, Number],
+        default: 'auto'
+    },
+    terms: {
+        type: String,
+        default: ''
+    }
+});
+const emit = defineEmits(["setCurrentRow"]);
+const currentRow = ref({})
+const $api = inject('$api')
+const dataList = ref([])
+const loading = ref(false)
+const curP = ref(1)
+const total = ref(0)
+const pageSize = ref(20)
+const paramsObj = computed(() => {
+    return {
+        p: curP.value,
+        name: terms.value || '长安银行'
+    }
+})
+const terms = ref('')
+const defaultProps = {
+  children: 'children',
+  label: 'label',
+}
+onMounted(async () => {
+    refreshData()
+})
+async function refreshData() {
+    currentRow.value = {}
+    dataList.value = [] 
+    loading.value = true; 
+    await getData()
+    loading.value = false;
+}
+
+const getData = async () => { 
+    // if(!paramsObj.value.name) return
+    const res = await $api.search_bank({params: {...paramsObj.value}}) 
+    dataList.value = res.list
+    total.value = res.total
+}
+ 
+const handleSizeChange = (val: number) => {
+  console.log(`${val} items per page`)
+}
+const handleCurrentChange = async (val: number) => {
+  console.log(`current page: ${val}`)
+  await refreshData()
+} 
+
+const handleCurrentTableChange = (val: any | undefined) => {  
+    if(!props.isRadioGroup) return 
+    currentRow.value = val || {}
+    emit('setCurrentRow', {data: deepClone(currentRow.value)})
+} 
+
+</script>
+<style lang='scss' scoped>
+@import "@/styles/table.scss";
+// 
+.el-tree {
+    background-color: transparent;
+}
+</style>
