@@ -1,19 +1,4 @@
 <template> 
-    <!-- <el-row>
-        <el-text type="danger" size="small">可多个关键字配合空格模糊搜索如：“杭州 工商 西湖”</el-text>
-    </el-row> -->
-    <el-row :gutter="20" class="u-m-b-10">
-        <el-col :span="16" :xs="16">
-            <el-input 
-                v-model="terms"   
-                clearable 
-                placeholder="关键字检索银行"
-            />
-        </el-col>
-        <el-col :span="8" :xs="8">
-            <el-button type="primary" @click="refreshData">搜索</el-button>
-        </el-col>
-    </el-row>
     <el-table 
         v-loading="loading" 
         :data="dataList" 
@@ -63,11 +48,7 @@
 import { reactive,ref,computed, inject, onMounted } from 'vue'
 import router from "@/router/guard" 
 import { ElMessage } from "element-plus";
-import { deepClone } from '@/utils';
-import useProductSku from '@/hook/useProductSku'
-const {
-    sku2treeData
-} = useProductSku()
+import { deepClone } from '@/utils'; 
 const props = defineProps({
     isSearchBar: {
         type: Boolean,
@@ -88,6 +69,10 @@ const props = defineProps({
     terms: {
         type: String,
         default: ''
+    },
+    params: {
+        type: Object,
+        deafult: () => ({})
     }
 });
 const emit = defineEmits(["setCurrentRow"]);
@@ -101,7 +86,7 @@ const pageSize = ref(20)
 const paramsObj = computed(() => {
     return {
         p: curP.value,
-        name: terms.value 
+        ...props.params
     }
 })
 const terms = ref('')
@@ -122,9 +107,9 @@ async function refreshData() {
 
 const getData = async () => { 
     // if(!paramsObj.value.name) return
-    const res = await $api.search_bank({params: {...paramsObj.value}}) 
-    dataList.value = res.list
-    total.value = res.total
+    const res = await $api.search_branches({params: {...paramsObj.value}}) 
+    // dataList.value = res.list
+    // total.value = res.total
 }
  
 const handleSizeChange = (val: number) => {

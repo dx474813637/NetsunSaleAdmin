@@ -203,31 +203,76 @@
                 </el-col>
             </el-row>
             <div v-show="need_bank_branch">
-                <el-row :gutter="20">
+                <!-- <el-row :gutter="20">
                     <el-col :span="12" :xs="24">
-                        <!-- <el-form-item prop="bank_address_code" label="开户银行省市编码">
+                        <el-form-item prop="bank_area" label="开户银行所在城市">
                             <el-cascader
-                                placeholder=""
+                                v-model="dynamicValidateForm.bank_area"
+                                style="width: 100%;"
+                                placeholder="请选择地区，可输入关键字筛选"
                                 :options="bank_address_code_arr"
                                 filterable
+                                clearable
                             />
-                        </el-form-item> -->
+                        </el-form-item>
+                    </el-col>
+                </el-row> -->
+                <el-row :gutter="20">
+                    <el-col :span="6" :xs="24">
+                        <el-form-item prop="bank_province" label="开户银行所在省份">
+                            <el-cascader
+                                v-model="dynamicValidateForm.bank_province"
+                                style="width: 100%;"
+                                placeholder="请选择省份，可输入关键字筛选"
+                                :options="provinces"
+                                :props="{
+                                    value: 'province_code',
+                                    label: 'province_name'
+                                }"
+                                filterable
+                                clearable
+                            />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6" :xs="24">
+                        <el-form-item prop="bank_city" label="所在城市">
+                            <el-cascader 
+                                v-model="dynamicValidateForm.bank_city"
+                                style="width: 100%;"
+                                placeholder="请选择城市，可输入关键字筛选"
+                                :options="bank_city_list"
+                                :props="{
+                                    value: 'city_code',
+                                    label: 'city_name'
+                                }"
+                                filterable
+                                clearable
+                            />
+                        </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="20">
+                    <el-col :span="12" :xs="24">
+                        <el-form-item prop="bank_name" label="开户银行全称 （含支行）"> 
+                            <div class="u-flex" style="width: 100%">
+                                <el-input 
+                                    v-model="dynamicValidateForm.bank_name"   
+                                    autocomplete="off" 
+                                    readonly 
+                                    class="u-flex-1" 
+                                />
+                                <el-button type="warning" plain class="u-m-l-20" @click.prevent="showBankSub = true" >点击查询</el-button>
+                            </div>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <!-- <el-row :gutter="20">
                     <el-col :span="12" :xs="24">
                         <el-form-item prop="bank_branch_id" label="开户银行联行号">
                             <el-input v-model="dynamicValidateForm.bank_branch_id" clearable />
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row :gutter="20">
-                    <el-col :span="12" :xs="24">
-                        <el-form-item prop="bank_name" label="开户银行全称 （含支行）">
-                            <el-input v-model="dynamicValidateForm.bank_name" clearable />
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                </el-row> -->
             </div>
             
             <el-row :gutter="20">
@@ -282,15 +327,21 @@
         <template #footer>
             <span class="dialog-footer">
                 <el-button @click="showBank = false">退出</el-button> 
-                <el-button type="primary" @click="bankTableConfirm">选择该银行</el-button>
-                <!-- <el-tooltip 
-                    effect="dark"
-                    content="请先输入关键字搜索后点击选中对应银行"
-                    placement="top-end" 
-                    >
-                    <el-button type="primary" @click="bankTableConfirm">选择该银行</el-button>
-                </el-tooltip> -->
-                  
+                <el-button type="primary" @click="bankTableConfirm">选择该银行</el-button> 
+            </span>
+        </template>
+    </el-dialog>
+    <el-dialog v-model="showBankSub" title="银行检索" width="800px" > 
+        <table-apply-bank-sub-list
+            isRadioGroup 
+            maxHeight="50vh" 
+            :params="bankSubParams"
+            @setCurrentRow="setCurrentRow2"
+        ></table-apply-bank-sub-list> 
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="showBankSub = false">退出</el-button> 
+                <el-button type="primary" @click="bankSubTableConfirm">选择该银行</el-button> 
             </span>
         </template>
     </el-dialog>
@@ -321,6 +372,8 @@ const disabled = ref(false)
 const showImg = ref(false)
 const init_loading = ref(false)
 const showBank = ref(false)
+const showBankSub = ref(false)
+const cityloading = ref(false)
 const $api: any = inject('$api')
 const formRef = ref<FormInstance>()
 const dynamicValidateForm = reactive<{
@@ -345,6 +398,9 @@ const dynamicValidateForm = reactive<{
     mobile_phone: string
     store_name: string
     merchant_shortname: string
+    bank_area: string
+    bank_province: string
+    bank_city: string
 }>({
     organization_type: '',
     business_license_copy: [],
@@ -367,28 +423,41 @@ const dynamicValidateForm = reactive<{
     mobile_phone: '',
     store_name: '',
     merchant_shortname: '',
+    bank_area: '',
+    bank_province: '',
+    bank_city: ''
 })
-const selectBank = ref({})
+const selectBank = ref({}) 
 const applyments_detail = ref({})
+const bank_city_list = ref([])
 const applyments_options_data = ref({})
-const bank_address_code = computed(() => applyments_options_data.value.bank_address_code || [])
-// const bank_address_code_arr = computed(() => { 
-//     return filterAddressData(bank_address_code.value) || []
-// })
+const bank_address_code = computed(() => applyments_options_data.value.bank_address_code?.filter(ele => ele.name.split(',').length != 3) || [])
+const bank_address_code_arr = computed(() => { 
+    return filterAddressData(bank_address_code.value) || []
+})
 const organization_type = computed(() => applyments_options_data.value.organization_type || [])
 const provinces = computed(() => applyments_options_data.value.provinces || [])
+ 
+const bankSubParams = computed(() => {
+    return {
+        bank_alias_code: selectBank.value.bank_alias_code,
+        city_code: dynamicValidateForm.bank_city[0]
+    }
+})
 
 const need_bank_branch = ref(false)
 function filterAddressData(data, index=0) {   
     let arr = data.filter(ele => ele.name.split(',').length == index+1)
     let data_filter2 = data.filter(ele => ele.name.split(',').length != index+1) 
     arr = arr.map(ele => {
+        let name = ele.name.split(',')[index]
         let obj = {
             value: ele.code,
-            label: ele.name.split(',')[index],
+            label: name,
         }
-        if(index != 2) {
-            obj.children = filterAddressData(data_filter2, index+1)
+        let data_by_last = data_filter2.filter(item => item.name.split(',').findIndex(item => item == name) != -1)
+        if(index != 2) { 
+            obj.children = filterAddressData(data_by_last, index+1)
         }
         return obj
     })
@@ -426,27 +495,37 @@ watch(
 
     }
 )
-// watch(
-//     () => selectBank.value,
-//     (n) => {
-//         dynamicValidateForm.account_bank = n.bank_alias 
-//         // dynamicValidateForm.bank_address_code = n.bank_alias 
-//     },
-//     {
-//         deep: true
-//     }
-// )
+watch(
+    () => dynamicValidateForm.bank_province,
+    async (n) => {
+        cityloading.value = true
+        await getCityData()
+        cityloading.value = false
+    } 
+)
 onMounted(async () => {
     await initData()
 })
+async function getCityData() {
+    const res = await $api.search_city({params: {province_code: dynamicValidateForm.bank_province[0]}})
+    if(res.code == 1) {
+        bank_city_list.value = res.list.data || []
+    }
+}
 function setCurrentRow({data = {}}) {
     console.log(data) 
     selectBank.value = data 
+}
+function setCurrentRow2({data = {}}) {
+    console.log(data)  
 }
 function bankTableConfirm() {
     dynamicValidateForm.account_bank = selectBank.value.bank_alias 
     need_bank_branch.value = selectBank.value.need_bank_branch == 1 ? true : false
     showBank.value = false
+}
+function bankSubTableConfirm() { 
+    showBankSub.value = false
 }
 async function initData() {
     init_loading.value = true
@@ -457,8 +536,12 @@ async function initData() {
 async function getApplymentsOptions() {
     const res = await $api.applyments_options();
     if (res.code == 1) {
-        applyments_options_data.value = res.list || {} 
-        // console.log(filterAddressData(bank_address_code.value))
+        let arr = res.list.bank_address_code.filter(ele => String(ele.code).includes('0000') && ele.name.includes('市'))
+        res.list.bank_address_code = [
+            ...res.list.bank_address_code,
+            ...arr.map(ele => ({code: Number(`${String(ele.code).slice(0,2)}0100`), name: `${ele.name},${ele.name}`}))
+        ]
+        applyments_options_data.value = res.list || {}  
     }
 }
 async function getApplymentsDetail() {
