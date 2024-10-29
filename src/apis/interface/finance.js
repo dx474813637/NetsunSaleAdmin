@@ -1,5 +1,41 @@
 import axios from '@/request/index';
 
+// fund_balance 账户实时余额 参数account_type
+    // BASIC: 基本账户
+    // FEES: 手续费账户
+    // OPERATION: 运营账户
+    // DEPOSIT: 保证金账户
+export const fund_balance = (data) => axios.get('Userapi/fund_balance', data)
+
+// fund_enddaybalance 账户日终余额 参数date YYYY-MM-DD account_type账户类型 BASIC: 基本账户 DEPOSIT: 保证金账户
+export const fund_enddaybalance = (data) => axios.get('Userapi/fund_enddaybalance', data)
+
+// fund_withdraw 商户预约提现  参数amount 金额，单位：分 account_type BASIC: 基本账户FEES: 手续费账户OPERATION: 运营账户
+export const fund_withdraw = (data) => axios.get('Userapi/fund_withdraw', data)
+
+// fund_withdraw_list 商户预约提现列表  参数p
+export const fund_withdraw_list = (data) => axios.get('Userapi/fund_withdraw_list', data)
+
+// fund_withdraw_no 商户查询预约提现状态 参数no 商户预约提现单号（列表里的id）
+export const fund_withdraw_no = (data) => axios.get('Userapi/fund_withdraw_no', data)
+
+// bill_tradebill 申请交易账单 参数bill_date 账单日期 YYYY-MM-DD bill_type账单类型
+    // ALL: 返回当日所有订单信息（不含充值退款订单）
+    // SUCCESS: 返回当日成功支付的订单（不含充值退款订单）
+    // REFUND: 返回当日退款订单（不含充值退款订单）
+    // RECHARGE_REFUND: 返回当日充值退款订单
+    // ALL_SPECIAL: 返回个性化账单当日所有订单信息
+    // SUC_SPECIAL: 返回个性化账单当日成功支付的订单
+    // REF_SPECIAL: 返回个性化账单当日退款订单
+export const bill_tradebill = (data) => axios.get('Userapi/bill_tradebill', data)
+
+// profitsharing_bills 申请分账账单 bill_date 账单日期 YYYY-MM-DD
+export const profitsharing_bills = (data) => axios.get('Userapi/profitsharing_bills', data)
+
+// bill_fundflowbill 申请资金账单 bill_date 账单日期 YYYY-MM-DD
+export const bill_fundflowbill = (data) => axios.get('Userapi/bill_fundflowbill', data)
+
+// ---------------------------
 // // query_product_list 一、融资产品列表
 // export const query_product_list = (data) => axios.get('Userapi/query_product_list', data)
 

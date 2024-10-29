@@ -37,4 +37,5 @@ export const applyments_detail = (data) => axios.get('Userapi/applyments_detail'
     // `merchant_shortname`  '商户简称',
 export const edit_applyments = (data, config) => axios.post('Userapi/edit_applyments', data, config)  
 
- 
+// submit_applyments  提交申请(微信支付商户)  商户信息编辑好后提交微信申请商户号。
+export const submit_applyments = (data) => axios.get('Userapi/submit_applyments', data)

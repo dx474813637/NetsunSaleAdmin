@@ -4,7 +4,7 @@
             <el-alert title="旺铺信息已认证" :closable="false" type="success" v-if="cpy_info.rz == 1" />
             <el-alert title="旺铺信息未认证" :closable="false" type="error" v-else />
         </div> -->
-        <el-form ref="formRef" :model="dynamicValidateForm" label-width="120px" :rules="rules"
+        <el-form ref="formRef" :model="dynamicValidateForm" label-width="120px" required :rules="rules"
             class="demo-dynamic u-p-20 box-border" label-position="top" scroll-to-error inline-message>
             <el-row :gutter="20">
                 <el-col :span="12" :xs="24">
@@ -19,12 +19,17 @@
             </el-row>
             <el-row :gutter="20">
                 <el-col :span="12" :xs="24">
-                    <el-form-item label="营业执照扫描件" prop="business_license_copy" required>
-                        <!-- <el-input v-model="dynamicValidateForm.business_license_copy" /> -->
-                        <el-upload ref="business_license_copy" action="" :class="{
-                            limit: dynamicValidateForm.business_license_copy.length == 1
-                        }" v-model:file-list="dynamicValidateForm.business_license_copy" list-type="picture-card"
-                            :limit="1" :headers="configHeader"
+                    <el-form-item label="营业执照扫描件" prop="business_license_copy" required> 
+                        <el-upload 
+                            ref="business_license_copy" 
+                            action="" 
+                            :class="{
+                                limit: dynamicValidateForm.business_license_copy.length == 1
+                            }" 
+                            v-model:file-list="dynamicValidateForm.business_license_copy" 
+                            list-type="picture-card"
+                            :limit="1" 
+                            :headers="configHeader"
                             :http-request="(options) => upload(options, dynamicValidateForm.business_license_copy)"
                             :before-upload="beforeUpload">
                             <el-icon>
@@ -39,7 +44,7 @@
                                             @click="handlePictureCardPreview(file)">
                                             <el-icon><zoom-in /></el-icon>
                                         </span>
-                                        <span v-if="!disabled" class="el-upload-list__item-delete"
+                                        <span v-if="imgEditPermission" class="el-upload-list__item-delete"
                                             @click="handleRemove(file, undefined, 'business_license_copy')">
                                             <el-icon>
                                                 <Delete />
@@ -54,7 +59,7 @@
             </el-row>
             <el-row :gutter="20">
                 <el-col :span="12" :xs="24">
-                    <el-form-item prop="business_license_number" label="营业执照注册号">
+                    <el-form-item prop="business_license_number" label="营业执照注册号" >
                         <el-input v-model="dynamicValidateForm.business_license_number" clearable />
                     </el-form-item>
                 </el-col>
@@ -71,11 +76,16 @@
             </el-row>
             <el-row :gutter="20">
                 <el-col :span="12" :xs="24">
-                    <el-form-item label="身份证人像面照片" prop="id_card_copy" required clearable>
-                        <!-- <el-input v-model="dynamicValidateForm.id_card_copy" /> -->
-                        <el-upload ref="id_card_copy" action="" :class="{
-                            limit: dynamicValidateForm.id_card_copy.length == 1
-                        }" v-model:file-list="dynamicValidateForm.id_card_copy" list-type="picture-card" :limit="1"
+                    <el-form-item label="身份证人像面照片" prop="id_card_copy" required clearable> 
+                        <el-upload 
+                            ref="id_card_copy" 
+                            action="" 
+                            :class="{
+                                limit: dynamicValidateForm.id_card_copy.length == 1
+                            }" 
+                            v-model:file-list="dynamicValidateForm.id_card_copy" 
+                            list-type="picture-card" 
+                            :limit="1"
                             :headers="configHeader"
                             :http-request="(options) => upload(options, dynamicValidateForm.id_card_copy)"
                             :before-upload="beforeUpload">
@@ -91,7 +101,7 @@
                                             @click="handlePictureCardPreview(file)">
                                             <el-icon><zoom-in /></el-icon>
                                         </span>
-                                        <span v-if="cpy_info.rz != 1" class="el-upload-list__item-delete"
+                                        <span v-if="imgEditPermission" class="el-upload-list__item-delete"
                                             @click="handleRemove(file, undefined, 'id_card_copy')">
                                             <el-icon>
                                                 <Delete />
@@ -108,9 +118,15 @@
                 <el-col :span="12" :xs="24">
                     <el-form-item label="身份证国徽面照片" prop="id_card_national" required clearable>
                         <!-- <el-input v-model="dynamicValidateForm.id_card_national" /> -->
-                        <el-upload ref="id_card_national" action="" :class="{
-                            limit: dynamicValidateForm.id_card_national.length == 1
-                        }" v-model:file-list="dynamicValidateForm.id_card_national" list-type="picture-card" :limit="1"
+                        <el-upload 
+                            ref="id_card_national" 
+                            action="" 
+                            :class="{
+                                limit: dynamicValidateForm.id_card_national.length == 1
+                            }" 
+                            v-model:file-list="dynamicValidateForm.id_card_national" 
+                            list-type="picture-card" 
+                            :limit="1"
                             :headers="configHeader"
                             :http-request="(options) => upload(options, dynamicValidateForm.id_card_national)"
                             :before-upload="beforeUpload">
@@ -126,7 +142,7 @@
                                             @click="handlePictureCardPreview(file)">
                                             <el-icon><zoom-in /></el-icon>
                                         </span>
-                                        <span v-if="cpy_info.rz != 1" class="el-upload-list__item-delete"
+                                        <span v-if="imgEditPermission" class="el-upload-list__item-delete"
                                             @click="handleRemove(file, undefined, 'id_card_national')">
                                             <el-icon>
                                                 <Delete />
@@ -155,27 +171,53 @@
             </el-row>
             <el-row :gutter="20" v-if="!isH5">
                 <el-col :span="12" :xs="24">
-                    <el-form-item label="身份证有效期" prop="id_card_valid_date" required>
-                        <el-date-picker v-model="dynamicValidateForm.id_card_valid_date" type="datetimerange"
-                            range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" value-format="x" />
+                    <el-form-item label="身份证有效期" prop="id_card_valid_date"  :rules="{required: !isH5, message: '不能为空', trigger:['blur', 'change']}">
+                        <el-config-provider :locale="locale">
+                            <el-date-picker 
+                                v-model="dynamicValidateForm.id_card_valid_date" 
+                                type="daterange"
+                                range-separator="至" 
+                                start-placeholder="开始时间" 
+                                end-placeholder="结束时间" 
+                                value-format="x"  
+                            />
+                        </el-config-provider>
+                       
                     </el-form-item>
                 </el-col>
             </el-row>
             <template v-else>
                 <el-row :gutter="20">
                     <el-col :span="12" :xs="24">
-                        <el-form-item label="身份证开始时间" prop="id_card_valid_time_begin" required>
-                            <el-date-picker style="width: 100%" placeholder="开始"
-                                v-model="dynamicValidateForm.id_card_valid_time_begin" type="datetime"
-                                value-format="x" />
+                        <el-form-item label="身份证开始时间" prop="id_card_valid_time_begin" :rules="{required: isH5, message: '不能为空', trigger:['blur', 'change']}">
+                            <el-config-provider :locale="locale">
+                                <el-date-picker 
+                                    style="width: 100%" 
+                                    placeholder="开始"
+                                    @change="(e) => {handleDateChange(e, 'id_card_valid_time_begin')}"
+                                    v-model="dynamicValidateForm.id_card_valid_time_begin" 
+                                    type="date"
+                                    value-format="x" 
+                                />
+                            </el-config-provider>
+                            
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="20">
                     <el-col :span="12" :xs="24">
-                        <el-form-item label="身份证结束时间" prop="id_card_valid_time" required>
-                            <el-date-picker style="width: 100%" placeholder="结束"
-                                v-model="dynamicValidateForm.id_card_valid_time" type="datetime" value-format="x" />
+                        <el-form-item label="身份证结束时间" prop="id_card_valid_time" :rules="{required: isH5, message: '不能为空', trigger:['blur', 'change']}">
+                            <el-config-provider :locale="locale">
+                                <el-date-picker 
+                                    style="width: 100%" 
+                                    placeholder="结束"
+                                    @change="(e) => {handleDateChange(e, 'id_card_valid_time')}"
+                                    v-model="dynamicValidateForm.id_card_valid_time" 
+                                    type="date" 
+                                    value-format="x" 
+                                />
+                            </el-config-provider>
+                            
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -198,62 +240,32 @@
             <el-row :gutter="20">
                 <el-col :span="12" :xs="24">
                     <el-form-item prop="account_name" label="开户名称">
+                        <div class="u-m-b-4" style="line-height: 18px;">
+                            <p><el-text size="small" type="info">1、选择经营者个人银行卡时，开户名称必须与身份证姓名一致。</el-text></p>
+                            <p><el-text size="small" type="info">2、选择对公账户时，开户名称必须与营业执照上的“商户名称”一致。</el-text></p> 
+                        </div>
                         <el-input v-model="dynamicValidateForm.account_name" clearable />
                     </el-form-item>
                 </el-col>
             </el-row>
-            <div v-show="need_bank_branch">
-                <!-- <el-row :gutter="20">
-                    <el-col :span="12" :xs="24">
-                        <el-form-item prop="bank_area" label="开户银行所在城市">
-                            <el-cascader
-                                v-model="dynamicValidateForm.bank_area"
-                                style="width: 100%;"
-                                placeholder="请选择地区，可输入关键字筛选"
-                                :options="bank_address_code_arr"
-                                filterable
-                                clearable
-                            />
-                        </el-form-item>
-                    </el-col>
-                </el-row> -->
-                <el-row :gutter="20">
-                    <el-col :span="6" :xs="24">
-                        <el-form-item prop="bank_province" label="开户银行所在省份">
-                            <el-cascader
-                                v-model="dynamicValidateForm.bank_province"
-                                style="width: 100%;"
-                                placeholder="请选择省份，可输入关键字筛选"
-                                :options="provinces"
-                                :props="{
-                                    value: 'province_code',
-                                    label: 'province_name'
-                                }"
-                                filterable
-                                clearable
-                            />
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6" :xs="24">
-                        <el-form-item prop="bank_city" label="所在城市">
-                            <el-cascader 
-                                v-model="dynamicValidateForm.bank_city"
-                                style="width: 100%;"
-                                placeholder="请选择城市，可输入关键字筛选"
-                                :options="bank_city_list"
-                                :props="{
-                                    value: 'city_code',
-                                    label: 'city_name'
-                                }"
-                                filterable
-                                clearable
-                            />
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+            <el-row :gutter="20">
+                <el-col :span="12" :xs="24">
+                    <el-form-item prop="bank_address_code_arr" label="开户银行所在地">
+                        <el-cascader
+                            v-model="dynamicValidateForm.bank_address_code_arr"
+                            style="width: 100%;"
+                            placeholder="请选择地区，可输入关键字筛选"
+                            :options="bank_address_code_arr"
+                            filterable
+                            clearable
+                        />
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <div v-show="need_bank_branch"> 
                 <el-row :gutter="20">
                     <el-col :span="12" :xs="24">
-                        <el-form-item prop="bank_name" label="开户银行全称 （含支行）"> 
+                        <el-form-item prop="bank_name" label="开户银行全称 （含支行）" :rules="{required: need_bank_branch, message: '不能为空', trigger:['blur', 'change']}"> 
                             <div class="u-flex" style="width: 100%">
                                 <el-input 
                                     v-model="dynamicValidateForm.bank_name"   
@@ -265,14 +277,7 @@
                             </div>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <!-- <el-row :gutter="20">
-                    <el-col :span="12" :xs="24">
-                        <el-form-item prop="bank_branch_id" label="开户银行联行号">
-                            <el-input v-model="dynamicValidateForm.bank_branch_id" clearable />
-                        </el-form-item>
-                    </el-col>
-                </el-row> -->
+                </el-row> 
             </div>
             
             <el-row :gutter="20">
@@ -335,6 +340,7 @@
         <table-apply-bank-sub-list
             isRadioGroup 
             maxHeight="50vh" 
+            :initData="applyments_options_data"
             :params="bankSubParams"
             @setCurrentRow="setCurrentRow2"
         ></table-apply-bank-sub-list> 
@@ -348,6 +354,8 @@
 </template>
 
 <script lang="ts" setup>
+import { dayjs } from 'element-plus'
+import locale from 'element-plus/dist/locale/zh-cn.mjs'
 import { reactive, ref, inject, onMounted, watch, toRefs } from 'vue'
 import router from '@/router/guard'
 import { genFileId, ElMessage } from 'element-plus'
@@ -375,6 +383,7 @@ const showBank = ref(false)
 const showBankSub = ref(false)
 const cityloading = ref(false)
 const $api: any = inject('$api')
+const mode = ref('')
 const formRef = ref<FormInstance>()
 const dynamicValidateForm = reactive<{
     organization_type: string
@@ -392,15 +401,13 @@ const dynamicValidateForm = reactive<{
     account_bank: string
     account_name: string
     bank_address_code: string
+    bank_address_code_arr: Array<any> 
     bank_branch_id: string
     bank_name: string
     account_number: string
     mobile_phone: string
     store_name: string
-    merchant_shortname: string
-    bank_area: string
-    bank_province: string
-    bank_city: string
+    merchant_shortname: string 
 }>({
     organization_type: '',
     business_license_copy: [],
@@ -417,35 +424,45 @@ const dynamicValidateForm = reactive<{
     account_bank: '',
     account_name: '',
     bank_address_code: '',
+    bank_address_code_arr: [],
     bank_branch_id: '',
     bank_name: '',
     account_number: '',
     mobile_phone: '',
     store_name: '',
-    merchant_shortname: '',
-    bank_area: '',
-    bank_province: '',
-    bank_city: ''
+    merchant_shortname: '', 
 })
 const selectBank = ref({}) 
+const need_bank_branch = ref(false)
+const selectBankSub = ref({}) 
+const bank_city_code = ref('') 
 const applyments_detail = ref({})
-const bank_city_list = ref([])
+// const bank_city_list = ref([])
 const applyments_options_data = ref({})
-const bank_address_code = computed(() => applyments_options_data.value.bank_address_code?.filter(ele => ele.name.split(',').length != 3) || [])
+const imgEditPermission = computed(() => {
+    return true
+})
+const bank_address_code = computed(() => applyments_options_data.value.bank_address_code || [])
 const bank_address_code_arr = computed(() => { 
     return filterAddressData(bank_address_code.value) || []
 })
 const organization_type = computed(() => applyments_options_data.value.organization_type || [])
-const provinces = computed(() => applyments_options_data.value.provinces || [])
+// const provinces = computed(() => applyments_options_data.value.provinces || [])
  
-const bankSubParams = computed(() => {
+const bankSubParams = computed(() => { 
     return {
         bank_alias_code: selectBank.value.bank_alias_code,
-        city_code: dynamicValidateForm.bank_city[0]
+        // city_code: bank_city_code.value
     }
 })
+// const bankSubBtnDisabled = computed(() => !bank_city_code.value || !dynamicValidateForm.bank_address_code)
+// const bankSubBtnText = computed(() => {
+//     let text = '点击查询';
+//     if(!dynamicValidateForm.bank_address_code) text = '请先选择开户银行所在地'
+//     else if(cityloading.value) text = '正在获取数据'
+//     return text
+// })
 
-const need_bank_branch = ref(false)
 function filterAddressData(data, index=0) {   
     let arr = data.filter(ele => ele.name.split(',').length == index+1)
     let data_filter2 = data.filter(ele => ele.name.split(',').length != index+1) 
@@ -473,11 +490,30 @@ const checkPic = (rule: any, value: any, callback: any) => {
     }
 }
 const rules = reactive<FormRules<typeof ruleForm>>({
-    id_card_copy: [{
-        validator: checkPic,
-        trigger: ['change', 'blur'],
-    }]
+    organization_type: [{ required: true, message: '不能为空', trigger: ['change', 'blur'], }],
+    business_license_copy: [{ validator: checkPic, trigger: ['change', 'blur'], }],
+    business_license_number: [{ required: true, message: '不能为空', trigger: ['change', 'blur'], }],  
+    merchant_name: [{ required: true, message: '不能为空', trigger: ['change', 'blur'], }],  
+    legal_person: [{ required: true, message: '不能为空', trigger: ['change', 'blur'], }],  
+    id_card_copy: [{ validator: checkPic, trigger: ['change', 'blur'], }],
+    id_card_national: [{ validator: checkPic, trigger: ['change', 'blur'], }],  
+    id_card_name: [{ required: true, message: '不能为空', trigger: ['change', 'blur'], }],  
+    id_card_number: [{ required: true, message: '不能为空', trigger: ['change', 'blur'], }],   
+    account_bank: [{ required: true, message: '不能为空', trigger: ['change', 'blur'], }],   
+    account_name: [{ required: true, message: '不能为空', trigger: ['change', 'blur'], }],   
+    account_number: [{ required: true, message: '不能为空', trigger: ['change', 'blur'], }],   
+    mobile_phone: [{ required: true, message: '不能为空', trigger: ['change', 'blur'], }],   
+    store_name: [{ required: true, message: '不能为空', trigger: ['change', 'blur'], }],    
+    merchant_shortname: [{ required: true, message: '不能为空', trigger: ['change', 'blur'], }],   
+    bank_address_code_arr: [{ required: true, message: '不能为空', trigger: ['change', 'blur'], }],   
 })
+
+watch(
+    () => router.currentRoute.value.query.mode,
+    (n) => {
+        mode.value = n
+    }, { immediate: true }
+)
 watch(
     () => dynamicValidateForm.id_card_copy[0],
     (n) => {
@@ -489,35 +525,73 @@ watch(
 )
 watch(
     () => dynamicValidateForm.id_card_valid_date,
-    (n) => {
-        dynamicValidateForm.id_card_valid_time_begin = n[0]
-        dynamicValidateForm.id_card_valid_time = n[1]
-
+    (n) => { 
+        dynamicValidateForm.id_card_valid_time_begin = n[0] ? dayjs(n[0]).format('YYYY-MM-DD') : ''
+        dynamicValidateForm.id_card_valid_time =  n[1] ? dayjs(n[1]).format('YYYY-MM-DD') : ''
     }
+) 
+watch(
+    () => dynamicValidateForm.bank_address_code_arr,
+    async (n) => { 
+        console.log(n)
+        dynamicValidateForm.bank_address_code = n? n[n.length - 1] : ''
+        // await getCity()
+        
+    },
+    { deep: true }
 )
 watch(
-    () => dynamicValidateForm.bank_province,
-    async (n) => {
-        cityloading.value = true
-        await getCityData()
-        cityloading.value = false
-    } 
-)
+    () => dynamicValidateForm.account_bank,
+    async (n, o) => {  
+        // selectBankSub.value = {};
+        // bank_city_code.value = '' 
+        // dynamicValidateForm.bank_name = ''
+        // dynamicValidateForm.bank_branch_id = ''
+        // if(n[1] != o[1] && n[0]) {
+        //     getCity()
+        // }
+    },
+    {deep: true}
+) 
 onMounted(async () => {
     await initData()
 })
-async function getCityData() {
-    const res = await $api.search_city({params: {province_code: dynamicValidateForm.bank_province[0]}})
-    if(res.code == 1) {
-        bank_city_list.value = res.list.data || []
-    }
-}
+// async function getCity() {
+//     let cit_code = ''
+//     let addr_code_arr = dynamicValidateForm.bank_address_code_arr
+//     if(addr_code_arr && need_bank_branch.value) {
+//         console.log(bank_address_code_arr.value)
+//         let province_name = bank_address_code_arr.value.filter(ele => ele.value == addr_code_arr[0])[0].label
+//         console.log(province_name)
+//         let city_name = bank_address_code.value.filter(ele => ele.code == addr_code_arr[1])[0]?.name.split(',')[1] 
+//         console.log(city_name)
+//         let province_code = provinces.value.filter(ele => ele.province_name == province_name)[0].province_code 
+//         cit_code = await getCityCode(province_code, city_name) 
+//         console.log(cit_code)
+//     }
+//     bank_city_code.value = cit_code
+// }
+// async function getCityCode(code:any, city_name:any) {
+//     return await new Promise(async (res, rej) => { 
+//         cityloading.value = true
+//         const result = await $api.search_city({params: {province_code: code}})
+//         cityloading.value = false
+//         if(result.code == 1) {
+//             let city_code = result.list.data.filter(ele => ele.city_name == city_name)[0].city_code
+//             // bank_city_list.value = res.list.data || []
+//             res(city_code)
+//         }
+//         rej(false)
+//     })
+    
+// }
 function setCurrentRow({data = {}}) {
     console.log(data) 
     selectBank.value = data 
 }
 function setCurrentRow2({data = {}}) {
     console.log(data)  
+    selectBankSub.value = data 
 }
 function bankTableConfirm() {
     dynamicValidateForm.account_bank = selectBank.value.bank_alias 
@@ -525,13 +599,17 @@ function bankTableConfirm() {
     showBank.value = false
 }
 function bankSubTableConfirm() { 
+    dynamicValidateForm.bank_name = selectBankSub.value.bank_branch_name 
+    dynamicValidateForm.bank_branch_id = selectBankSub.value.bank_branch_id 
     showBankSub.value = false
 }
 async function initData() {
     init_loading.value = true
     await getApplymentsOptions()
     init_loading.value = false
-    // await getApplymentsDetail()
+    if(mode.value == 'edit') {
+        await getApplymentsDetail()
+    } 
 }
 async function getApplymentsOptions() {
     const res = await $api.applyments_options();
@@ -547,10 +625,36 @@ async function getApplymentsOptions() {
 async function getApplymentsDetail() {
     const res = await $api.applyments_detail();
     if (res.code == 1) {
-        applyments_detail.value = res.list || {}
+        applyments_detail.value = res.list || {};
+        let data:any = applyments_detail.value
+        dynamicValidateForm.account_bank = data.account_bank
+        dynamicValidateForm.account_name = data.account_name
+        dynamicValidateForm.account_number = data.account_number
+        dynamicValidateForm.bank_address_code = data.bank_address_code 
+        let code = data.bank_address_code
+        dynamicValidateForm.bank_address_code_arr = [Number(`${String(code).slice(0,2)}0000`), Number(`${String(code).slice(0,4)}00`), Number(code)]
+        dynamicValidateForm.bank_branch_id = data.bank_branch_id
+        dynamicValidateForm.bank_name = data.bank_name
+        dynamicValidateForm.business_license_copy = [{url: data.business_license_copy}]
+        dynamicValidateForm.business_license_number = data.business_license_number
+        dynamicValidateForm.id_card_copy = [{url: data.id_card_copy}]
+        dynamicValidateForm.id_card_national = [{url: data.id_card_national}]
+        dynamicValidateForm.id_card_number = data.id_card_number
+        dynamicValidateForm.id_card_valid_time = data.id_card_valid_time
+        dynamicValidateForm.id_card_valid_time_begin = data.id_card_valid_time_begin
+        dynamicValidateForm.legal_person = data.legal_person
+        dynamicValidateForm.merchant_name = data.merchant_name
+        dynamicValidateForm.merchant_shortname = data.merchant_shortname
+        dynamicValidateForm.mobile_phone = data.mobile_phone
+        dynamicValidateForm.organization_type = data.organization_type
+        dynamicValidateForm.store_name = data.store_name 
+        if( dynamicValidateForm.bank_branch_id || dynamicValidateForm.bank_name) {
+            need_bank_branch.value = true
+        }
     }
 }
 function submitForm(formEl: FormInstance | undefined) {
+    // console.log(dynamicValidateForm)
     if (!formEl) return
     formEl.validate(async (valid) => {
         if (valid) {
@@ -568,7 +672,7 @@ function submitForm(formEl: FormInstance | undefined) {
         }
     })
 }
-async function submitApi(data) {
+async function submitApi(data) { 
     const res = await $api.edit_applyments({
         ...data
     })
@@ -636,6 +740,15 @@ async function handlePictureExceed(files: UploadFile, uploadFiles, propName) {
         file.uid = genFileId()
         uploadRefs[index]!.handleStart(file)
     }
+}
+function handleDateChange(e, key) { 
+    if(e) {
+        dynamicValidateForm[key] = dayjs(e).format('YYYY-MM-DD')
+    }
+    else {
+        dynamicValidateForm[key] = ''
+    }
+    
 }
 
 </script>
