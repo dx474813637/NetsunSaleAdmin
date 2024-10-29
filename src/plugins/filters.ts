@@ -128,6 +128,13 @@ export default {
 				else if(status == 1) text = '通过'
 				else if(status == 2) text = '拒绝' 
 				return text
+			},
+			applyments_status(status: string | number | undefined) {
+				let text = status
+				if(status == 0) text = '未提交'
+				else if(status == 1) text = '已提交'
+				else if(status == 2) text = '已通过' 
+				return text
 			}
 		}
 	},

@@ -370,6 +370,9 @@ const { isH5 } = toRefs(settings)
 import { userStore } from '@/stores/user'
 const user = userStore()
 const { cpy_info } = toRefs(user)
+import { useApplymentsStore } from '@/stores/applyments'
+const applyments = useApplymentsStore()
+const { applyments_detail, applyments_zt } = toRefs(applyments)
 // import { DomEditor } from '@wangeditor/editor'
 import {
     Delete, Plus, ZoomIn, CirclePlus, FolderOpened
@@ -435,8 +438,7 @@ const dynamicValidateForm = reactive<{
 const selectBank = ref({}) 
 const need_bank_branch = ref(false)
 const selectBankSub = ref({}) 
-const bank_city_code = ref('') 
-const applyments_detail = ref({})
+const bank_city_code = ref('')  
 // const bank_city_list = ref([])
 const applyments_options_data = ref({})
 const imgEditPermission = computed(() => {
@@ -608,7 +610,8 @@ async function initData() {
     await getApplymentsOptions()
     init_loading.value = false
     if(mode.value == 'edit') {
-        await getApplymentsDetail()
+        await applyments.getApplymentsDetail()
+        initApplymentsDataToForm()
     } 
 }
 async function getApplymentsOptions() {
@@ -622,36 +625,34 @@ async function getApplymentsOptions() {
         applyments_options_data.value = res.list || {}  
     }
 }
-async function getApplymentsDetail() {
-    const res = await $api.applyments_detail();
-    if (res.code == 1) {
-        applyments_detail.value = res.list || {};
-        let data:any = applyments_detail.value
-        dynamicValidateForm.account_bank = data.account_bank
-        dynamicValidateForm.account_name = data.account_name
-        dynamicValidateForm.account_number = data.account_number
-        dynamicValidateForm.bank_address_code = data.bank_address_code 
-        let code = data.bank_address_code
-        dynamicValidateForm.bank_address_code_arr = [Number(`${String(code).slice(0,2)}0000`), Number(`${String(code).slice(0,4)}00`), Number(code)]
-        dynamicValidateForm.bank_branch_id = data.bank_branch_id
-        dynamicValidateForm.bank_name = data.bank_name
-        dynamicValidateForm.business_license_copy = [{url: data.business_license_copy}]
-        dynamicValidateForm.business_license_number = data.business_license_number
-        dynamicValidateForm.id_card_copy = [{url: data.id_card_copy}]
-        dynamicValidateForm.id_card_national = [{url: data.id_card_national}]
-        dynamicValidateForm.id_card_number = data.id_card_number
-        dynamicValidateForm.id_card_valid_time = data.id_card_valid_time
-        dynamicValidateForm.id_card_valid_time_begin = data.id_card_valid_time_begin
-        dynamicValidateForm.legal_person = data.legal_person
-        dynamicValidateForm.merchant_name = data.merchant_name
-        dynamicValidateForm.merchant_shortname = data.merchant_shortname
-        dynamicValidateForm.mobile_phone = data.mobile_phone
-        dynamicValidateForm.organization_type = data.organization_type
-        dynamicValidateForm.store_name = data.store_name 
-        if( dynamicValidateForm.bank_branch_id || dynamicValidateForm.bank_name) {
-            need_bank_branch.value = true
-        }
-    }
+async function initApplymentsDataToForm() { 
+    let data:any = applyments_detail.value
+    dynamicValidateForm.account_bank = data.account_bank
+    dynamicValidateForm.account_name = data.account_name
+    dynamicValidateForm.account_number = data.account_number
+    dynamicValidateForm.bank_address_code = data.bank_address_code 
+    let code = data.bank_address_code
+    dynamicValidateForm.bank_address_code_arr = [Number(`${String(code).slice(0,2)}0000`), Number(`${String(code).slice(0,4)}00`), Number(code)]
+    dynamicValidateForm.bank_branch_id = data.bank_branch_id
+    dynamicValidateForm.bank_name = data.bank_name
+    dynamicValidateForm.business_license_copy = [{url: data.business_license_copy}]
+    dynamicValidateForm.business_license_number = data.business_license_number
+    dynamicValidateForm.id_card_copy = [{url: data.id_card_copy}]
+    dynamicValidateForm.id_card_national = [{url: data.id_card_national}]
+    dynamicValidateForm.id_card_name = data.id_card_name
+    dynamicValidateForm.id_card_number = data.id_card_number
+    dynamicValidateForm.id_card_valid_time = data.id_card_valid_time
+    dynamicValidateForm.id_card_valid_time_begin = data.id_card_valid_time_begin
+    dynamicValidateForm.id_card_valid_date = [new Date(data.id_card_valid_time_begin).getTime(), new Date(data.id_card_valid_time).getTime()]
+    dynamicValidateForm.legal_person = data.legal_person
+    dynamicValidateForm.merchant_name = data.merchant_name
+    dynamicValidateForm.merchant_shortname = data.merchant_shortname
+    dynamicValidateForm.mobile_phone = data.mobile_phone
+    dynamicValidateForm.organization_type = data.organization_type
+    dynamicValidateForm.store_name = data.store_name 
+    if( dynamicValidateForm.bank_branch_id || dynamicValidateForm.bank_name) {
+        need_bank_branch.value = true
+    } 
 }
 function submitForm(formEl: FormInstance | undefined) {
     // console.log(dynamicValidateForm)
