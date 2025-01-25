@@ -1,129 +1,147 @@
 <template>
-    <el-table 
-        v-loading="loading" 
-        :data="list" 
-        style="width: 100%"  
-        :maxHeight="maxHeight"  
-        > 
-        <el-table-column prop="id" label="ID" width="70" align="center" fixed="left" />
-        <el-table-column prop="cate" label="类型" width="70" align="center"   :fixed="isH5? false :'left'" />
-        <el-table-column prop="info" label="原因" width="240"  >
-            <template #default="{row}">
-                <div v-html="row.info"></div> 
-            </template> 
-        </el-table-column>
-        <el-table-column label="附图" width="90" align="center"  >
-            <template #default="{row}">
-                <template v-if="row.img">
-                    <el-image 
-                        style="width: 50px; height: 50px"
-                        :src="row.img.split('|')[0]"
-                        :zoom-rate="1.2"
-                        :preview-src-list="row.img.split('|')" 
-                        lazy
-                        fit="contain" 
-                        :preview-teleported="true"
-                    ></el-image> 
+    <div>
+        <div>
+            <DiyForm
+                :ddata="diyFormData.data"
+                :form="diyFormData.form"
+                :name="diyFormData.name"
+                :flex="diyFormData.flex"
+                :align="diyFormData.align"
+                :nowDialog="diyFormData"
+                sureText="搜 索"
+                showClear
+                :isView="false"
+                :showCancel="false"  
+                @confirm="onDiyFormConfirm" 
+                @remove="onDiyFormRemove" 
+            ></DiyForm>
+        </div>
+        <el-table 
+            v-loading="loading" 
+            :data="list" 
+            style="width: 100%"  
+            :maxHeight="maxHeight"  
+            > 
+            <el-table-column prop="id" label="ID" width="70" align="center" fixed="left" />
+            <el-table-column prop="cate" label="类型" width="70" align="center"   :fixed="isH5? false :'left'" />
+            <el-table-column prop="info" label="原因" width="240"  >
+                <template #default="{row}">
+                    <div v-html="row.info"></div> 
                 </template> 
-                <template v-else>
-                    无
+            </el-table-column>
+            <el-table-column label="附图" width="90" align="center"  >
+                <template #default="{row}">
+                    <template v-if="row.img">
+                        <el-image 
+                            style="width: 50px; height: 50px"
+                            :src="row.img.split('|')[0]"
+                            :zoom-rate="1.2"
+                            :preview-src-list="row.img.split('|')" 
+                            lazy
+                            fit="contain" 
+                            :preview-teleported="true"
+                        ></el-image> 
+                    </template> 
+                    <template v-else>
+                        无
+                    </template> 
+                    
                 </template> 
+            </el-table-column> 
+            <el-table-column label="订单ID" width="90" align="center"  >
+                <template #default="{row}">
+                    <div class="u-flex-column">
+                        <el-text>{{ row.oid }}</el-text>
+                        <el-link type="primary" size="small"  @click="emit('detailEvent', row.oid)">查看</el-link>
+                    </div>
+                    
+                </template> 
+            </el-table-column>
+            <el-table-column label="快递单号" width="100"  >
+                <template #default="{row}">
+                        <el-text type="primary" size="small" tag="a" style="cursor: pointer" @click="handleExpressClick(row)">{{ row.express }}</el-text> 
+                </template> 
+            </el-table-column>
+            <!-- <el-table-column label="卖方" width="100"  >
+                <template #default="{row}">
+                    <el-text size="small">{{ row.express1 }}</el-text>
+                </template> 
+            </el-table-column>  -->
+            <el-table-column prop="zt_title" label="状态" align="center" width="120"  />  
+            <el-table-column label="创建时间" width="150" align="center" >
+                <template #default="{row}">
+                    <el-text size="small">{{ row.ctime }}</el-text>
+                </template> 
+            </el-table-column>
+            <el-table-column label="更新时间" width="150" align="center" >
+                <template #default="{row}">
+                    <el-text size="small">{{ row.uptime }}</el-text>
+                </template> 
+            </el-table-column>
+            <el-table-column label="操作" width="200" align="center" :fixed="isH5? false :'right'"> 
+                <template #default="{row}">
+                    <div class="u-flex u-flex-center"> 
+                        <div  v-if="row.zt == 0">
+                            <el-popconfirm 
+                                title="同意确认" 
+                                @confirm="checkRefundBtn({sh: 1, order_id: row.oid})"
+                                confirm-button-text="确认"
+                                cancel-button-text="取消"
+                                >
+                                <template #reference>
+                                    <el-button plain type="primary" size="small">同意售后</el-button>	
+                                    <!-- <el-button plain type="primary" size="small">发货</el-button>	 -->
+                                </template>
+                            </el-popconfirm>
+                            <el-popconfirm 
+                                title="拒绝确认" 
+                                @confirm="checkRefundBtn({sh: 0, order_id: row.oid})"
+                                confirm-button-text="确认"
+                                cancel-button-text="取消"
+                                >
+                                <template #reference>
+                                    <el-button plain type="danger" size="small" >拒绝售后</el-button>	
+                                    <!-- <el-button plain type="primary" size="small">发货</el-button>	 -->
+                                </template>
+                            </el-popconfirm>
+                        </div>
+                        <div v-if="row.button1 == 1" class="u-m-l-10">
+                            <el-popconfirm 
+                                title="操作确认" 
+                                @confirm="confirmSendBtn(row.id)"
+                                confirm-button-text="确认"
+                                cancel-button-text="取消"
+                                >
+                                <template #reference>
+                                    <el-button plain type="warning" size="small">{{ row.button1_title }}</el-button>	 
+                                </template>
+                            </el-popconfirm>
+                        </div>
+                        <div  v-if="row.button2 == 1" class="u-m-l-10">
+                            <el-popconfirm 
+                                title="操作确认" 
+                                @confirm="overServiceBtn(row.id)"
+                                confirm-button-text="确认"
+                                cancel-button-text="取消"
+                                >
+                                <template #reference>
+                                    <el-button plain type="danger" size="small">{{ row.button2_title }}</el-button>	 
+                                </template>
+                            </el-popconfirm> 
+                        </div>
+                    </div>
+                    
                 
-            </template> 
-        </el-table-column> 
-        <el-table-column label="订单ID" width="90" align="center"  >
-            <template #default="{row}">
-                <div class="u-flex-column">
-                    <el-text>{{ row.oid }}</el-text>
-                    <el-link type="primary" size="small"  @click="emit('detailEvent', row.oid)">查看</el-link>
+                </template>
+                
+            </el-table-column>
+            <template #empty>
+                <div class="u-flex u-flex-center u-p-t-20 u-p-b-20">
+                    <el-empty description="无数据" />
                 </div>
-                
-            </template> 
-        </el-table-column>
-        <el-table-column label="快递单号" width="100"  >
-            <template #default="{row}">
-                    <el-text type="primary" size="small" tag="a" style="cursor: pointer" @click="handleExpressClick(row)">{{ row.express }}</el-text> 
-            </template> 
-        </el-table-column>
-        <!-- <el-table-column label="卖方" width="100"  >
-            <template #default="{row}">
-                <el-text size="small">{{ row.express1 }}</el-text>
-            </template> 
-        </el-table-column>  -->
-        <el-table-column prop="zt_title" label="状态" align="center" width="120"  />  
-        <el-table-column label="创建时间" width="150" align="center" >
-            <template #default="{row}">
-                <el-text size="small">{{ row.ctime }}</el-text>
-            </template> 
-        </el-table-column>
-        <el-table-column label="更新时间" width="150" align="center" >
-            <template #default="{row}">
-                <el-text size="small">{{ row.uptime }}</el-text>
-            </template> 
-        </el-table-column>
-        <el-table-column label="操作" width="200" align="center" :fixed="isH5? false :'right'"> 
-            <template #default="{row}">
-                <div class="u-flex u-flex-center"> 
-                    <div  v-if="row.zt == 0">
-                        <el-popconfirm 
-                            title="同意确认" 
-                            @confirm="checkRefundBtn({sh: 1, order_id: row.oid})"
-                            confirm-button-text="确认"
-                            cancel-button-text="取消"
-                            >
-                            <template #reference>
-                                <el-button plain type="primary" size="small">同意售后</el-button>	
-                                <!-- <el-button plain type="primary" size="small">发货</el-button>	 -->
-                            </template>
-                        </el-popconfirm>
-                        <el-popconfirm 
-                            title="拒绝确认" 
-                            @confirm="checkRefundBtn({sh: 0, order_id: row.oid})"
-                            confirm-button-text="确认"
-                            cancel-button-text="取消"
-                            >
-                            <template #reference>
-                                <el-button plain type="danger" size="small" >拒绝售后</el-button>	
-                                <!-- <el-button plain type="primary" size="small">发货</el-button>	 -->
-                            </template>
-                        </el-popconfirm>
-                    </div>
-                    <div v-if="row.button1 == 1" class="u-m-l-10">
-                        <el-popconfirm 
-                            title="操作确认" 
-                            @confirm="confirmSendBtn(row.id)"
-                            confirm-button-text="确认"
-                            cancel-button-text="取消"
-                            >
-                            <template #reference>
-                                <el-button plain type="warning" size="small">{{ row.button1_title }}</el-button>	 
-                            </template>
-                        </el-popconfirm>
-                    </div>
-                    <div  v-if="row.button2 == 1" class="u-m-l-10">
-                        <el-popconfirm 
-                            title="操作确认" 
-                            @confirm="overServiceBtn(row.id)"
-                            confirm-button-text="确认"
-                            cancel-button-text="取消"
-                            >
-                            <template #reference>
-                                <el-button plain type="danger" size="small">{{ row.button2_title }}</el-button>	 
-                            </template>
-                        </el-popconfirm> 
-                    </div>
-                </div>
-                
-               
             </template>
-            
-        </el-table-column>
-        <template #empty>
-            <div class="u-flex u-flex-center u-p-t-20 u-p-b-20">
-                <el-empty description="无数据" />
-            </div>
-        </template>
-    </el-table>
+        </el-table>
+    </div>
     <div class="list-page-box u-p-t-20 u-p-b-20">
         <el-pagination
             v-model:current-page="curP"
@@ -209,8 +227,79 @@ const expressRef = ref()
 const paramsObj = computed(() => {
     return {
         p: curP.value,
+        ...diyFormData.data,
         ...props.customParams
     }
+}) 
+let diyFormData = reactive({
+    title: "title", 
+    name: "serviceFilterForm",
+    name2: "serviceFilterForm2",
+    show: true,
+    data: {
+        express: '',
+        zt: '',
+        id: ''
+    },
+    flex: 'row',
+    align: 'start',
+    form: 
+    [
+        {
+            label: "订单ID",
+            el: "input",
+            prop: "id",
+            class: 'width-pc-base',
+            place: "订单ID", 
+            required: false
+        },  
+        {
+            label: "快递单号",
+            el: "input",
+            prop: "express",
+            class: 'width-pc-base',
+            place: "快递单号", 
+            required: false
+        },  
+        {
+            label: "售后状态",
+            el: "select",
+            prop: "zt",
+            props: {
+                label: 'label',
+                value: 'value'
+            },
+            class: 'width-pc-base',
+            place: "售后状态", 
+            required: false,
+            options: [
+                {
+                    value: '',
+                    label: '全部',
+                },
+                {
+                    value: '99',
+                    label: '待审核',
+                },
+                {
+                    value: '1',
+                    label: '审核通过',
+                },
+                {
+                    value: '2',
+                    label: '审核拒绝',
+                },
+                {
+                    value: '3',
+                    label: '快递退回中',
+                },
+                {
+                    value: '5',
+                    label: '售后结束',
+                },
+            ]
+        },  
+    ], 
 }) 
 // const deliveryList = ref([]) 
 const expressForm = ref({
@@ -313,6 +402,16 @@ function close() {
 function lookDetailClick() {
 
 } 
+async function onDiyFormRemove() {
+    loading.value = true; 
+    await getData()
+    loading.value = false;
+}
+async function onDiyFormConfirm(e) {  
+    loading.value = true; 
+    await getData()
+    loading.value = false;
+}
 </script>
 <style lang='scss' scoped>
 @import "@/styles/table.scss";

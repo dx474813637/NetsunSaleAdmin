@@ -228,3 +228,6 @@ export const order_express_create = (data) => axios.get('Userapi/order_express_c
 export const address_list = (data) => axios.get('Userapi/adress_list', data)
 // address_shenhe 自提点审核 参数id 自提点id sh1通过 2拒绝
 export const address_shenhe = (data) => axios.get('Userapi/adress_shenhe', data)
+
+// order_community_log 发货记录 参数tid 自提点id必传 riqi日期 空默认当天
+export const order_community_log = (data) => axios.get('Userapi/order_community_log', data)

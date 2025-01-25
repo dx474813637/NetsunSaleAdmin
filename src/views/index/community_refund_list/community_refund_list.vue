@@ -2,9 +2,7 @@
 <template>
 	<div>
 		<div class="u-p-10 box">
-			<table-address-goods @admin="adminEvent" @adminSend="adminEvent2" ></table-address-goods>
-			<community-goods-popup :show="dialogTableVisible" :id="currentData.id" @setShow="setShow"></community-goods-popup>
-			<community-goods-log-popup :show="dialogTableVisible2" :id="currentData.id" @setShow="setShow2"></community-goods-log-popup>
+			<table-community-refund ></table-community-refund> 
 		</div>
 	</div>
 </template>

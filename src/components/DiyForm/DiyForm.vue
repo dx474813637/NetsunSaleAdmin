@@ -291,6 +291,15 @@
         width: auto;
         padding-right: 10px; 
       }
+      
+      @media screen and (min-width: 768px) {
+          &.width-pc-base {
+            flex: 0 0 200px;
+            width: 200px;
+            padding-right: 10px; 
+          }  
+        
+      }
       // background: #f00;
       > h4 {
         margin-bottom: 10px;

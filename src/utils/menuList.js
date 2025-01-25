@@ -187,12 +187,6 @@
 				} 
 			}, 
 			{
-				"label": "开票信息", 
-				"icon": "",
-				"role": "[1, 2, 3]", 
-				"url": "https://www.sunmaxx.cn/User/kaipiao" 
-			}, 
-			{
 				"label": "结算下载", 
 				"icon": "",
 				"role": "[1, 2, 3]", 
@@ -216,6 +210,30 @@
 					"name": "vouchers_statement_list"
 				} 
 			}
+		]
+	}, 
+	{
+		"label": "微信结算",
+		"type": "title", 
+		"index": "wxzf",
+		"role": "[1, 2, 3]",  
+		"icon": "icon-shiyanshikaohe",
+		"children": [
+			{
+				"label": "支付账户", 
+				"icon": "", 
+				"index": "applyments_index",  
+				"role": "[1, 2, 3]", 
+				"route": {
+					"name": "applyments_index"
+				} 
+			},
+			{
+				"label": "开票信息", 
+				"icon": "",
+				"role": "[1, 2, 3]", 
+				"url": "https://www.sunmaxx.cn/User/kaipiao" 
+			} 
 		]
 	}, 
 	{
@@ -264,6 +282,16 @@
 				"role": "[1, 2, 3]", 
 				"route": {
 					"name": "order_list2"
+				} 
+			},
+			{
+				"label": "退货记录", 
+				"icon": "", 
+				"index": "community_refund_list", 
+				"community": "1",
+				"role": "[1, 2, 3]", 
+				"route": {
+					"name": "community_refund_list"
 				} 
 			}
 		]

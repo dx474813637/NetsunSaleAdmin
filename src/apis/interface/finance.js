@@ -15,7 +15,12 @@ export const fund_withdraw = (data) => axios.get('Userapi/fund_withdraw', data)
 
 // fund_withdraw_list 商户预约提现列表  参数p
 export const fund_withdraw_list = (data) => axios.get('Userapi/fund_withdraw_list', data)
-
+// CREATE_SUCCESS: 受理成功
+// SUCCESS: 提现成功
+// FAIL: 提现失败
+// REFUND: 提现退票
+// CLOSE: 关单
+// INIT: 业务单已创建
 // fund_withdraw_no 商户查询预约提现状态 参数no 商户预约提现单号（列表里的id）
 export const fund_withdraw_no = (data) => axios.get('Userapi/fund_withdraw_no', data)
 

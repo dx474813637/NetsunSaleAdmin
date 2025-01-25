@@ -4,13 +4,13 @@
             <el-alert title="旺铺信息已认证" :closable="false" type="success" v-if="cpy_info.rz == 1" />
             <el-alert title="旺铺信息未认证" :closable="false" type="error" v-else />
         </div> -->
-        <el-form ref="formRef" :model="dynamicValidateForm" label-width="120px" required :rules="rules"
+        <el-form ref="formRef" :model="dynamicValidateForm" label-width="120px" required :rules="rules" :disabled="formEditDisabled"
             class="demo-dynamic u-p-20 box-border" label-position="top" scroll-to-error inline-message>
             <el-row :gutter="20">
                 <el-col :span="12" :xs="24">
                     <el-form-item label="主体类型" prop="organization_type">
                         <el-select style="width: 100%" v-model="dynamicValidateForm.organization_type" placeholder="类型"
-                            clearable v-loading="init_loading">
+                            clearable valueKey="id" v-loading="init_loading">
                             <el-option v-for="item in organization_type" :key="item.id" :label="`${item.name}`"
                                 :value="item.id" />
                         </el-select>
@@ -66,10 +66,10 @@
             </el-row>
             <el-row :gutter="20">
                 <el-col :span="12" :xs="24">
-                    <el-form-item prop="merchant_name" label="商户名称">
+                    <el-form-item prop="merchant_name" label="公司名称(商户名称)">
                         <el-input v-model="dynamicValidateForm.merchant_name" clearable />
                     </el-form-item>
-                    <el-form-item prop="legal_person" label="经营者/法定代表人姓名">
+                    <el-form-item prop="legal_person" label="法定代表人姓名">
                         <el-input v-model="dynamicValidateForm.legal_person" clearable />
                     </el-form-item>
                 </el-col>
@@ -169,7 +169,53 @@
                     </el-form-item>
                 </el-col>
             </el-row>
-            <el-row :gutter="20" v-if="!isH5">
+            <el-row :gutter="20">
+                <el-col :span="12" :xs="24">
+                    <el-form-item label="身份证开始时间" prop="id_card_valid_time_begin" :rules="{required: true, message: '不能为空', trigger:['blur', 'change']}">
+                        <el-config-provider :locale="locale">
+                            <el-date-picker 
+                                style="width: 100%" 
+                                placeholder="开始"
+                                @change="(e) => {handleDateChange(e, 'id_card_valid_time_begin')}"
+                                v-model="dynamicValidateForm.id_card_valid_time_begin" 
+                                type="date"
+                                value-format="x" 
+                            />
+                        </el-config-provider>
+                        
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="12" :xs="24">
+                    <el-form-item label="身份证结束时间" prop="id_card_valid_time" :rules="{required: true, message: '不能为空', trigger:['blur', 'change']}">
+                        <el-row style="width: 100%;">
+                            <el-col :span="8" :xs="24">
+                                <el-radio-group v-model="valid_time_radio">
+                                    <el-radio value="0" size="large">有效日期</el-radio>
+                                    <el-radio value="长期" size="large">长期</el-radio>
+                                </el-radio-group>
+                            </el-col>
+                            <el-col :span="16" :xs="24" v-show="valid_time_radio != '长期'">
+                                <el-config-provider :locale="locale">
+                                    <el-date-picker 
+                                        :disabled="valid_time_radio == '长期'"
+                                        style="width: 100%" 
+                                        placeholder="结束日期"
+                                        @change="(e) => {handleDateChange(e, 'id_card_valid_time')}"
+                                        v-model="dynamicValidateForm.id_card_valid_time" 
+                                        type="date" 
+                                        value-format="x" 
+                                    />
+                                </el-config-provider>
+                            </el-col>
+                        </el-row>
+                        
+                        
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <!-- <el-row :gutter="20" v-if="!isH5">
                 <el-col :span="12" :xs="24">
                     <el-form-item label="身份证有效期" prop="id_card_valid_date"  :rules="{required: !isH5, message: '不能为空', trigger:['blur', 'change']}">
                         <el-config-provider :locale="locale">
@@ -186,42 +232,8 @@
                     </el-form-item>
                 </el-col>
             </el-row>
-            <template v-else>
-                <el-row :gutter="20">
-                    <el-col :span="12" :xs="24">
-                        <el-form-item label="身份证开始时间" prop="id_card_valid_time_begin" :rules="{required: isH5, message: '不能为空', trigger:['blur', 'change']}">
-                            <el-config-provider :locale="locale">
-                                <el-date-picker 
-                                    style="width: 100%" 
-                                    placeholder="开始"
-                                    @change="(e) => {handleDateChange(e, 'id_card_valid_time_begin')}"
-                                    v-model="dynamicValidateForm.id_card_valid_time_begin" 
-                                    type="date"
-                                    value-format="x" 
-                                />
-                            </el-config-provider>
-                            
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="20">
-                    <el-col :span="12" :xs="24">
-                        <el-form-item label="身份证结束时间" prop="id_card_valid_time" :rules="{required: isH5, message: '不能为空', trigger:['blur', 'change']}">
-                            <el-config-provider :locale="locale">
-                                <el-date-picker 
-                                    style="width: 100%" 
-                                    placeholder="结束"
-                                    @change="(e) => {handleDateChange(e, 'id_card_valid_time')}"
-                                    v-model="dynamicValidateForm.id_card_valid_time" 
-                                    type="date" 
-                                    value-format="x" 
-                                />
-                            </el-config-provider>
-                            
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </template>
+            <template v-else> -->
+            <!-- </template> -->
             <el-row :gutter="20">
                 <el-col :span="12" :xs="24">
                     <el-form-item prop="account_bank" label="开户银行"> 
@@ -241,8 +253,7 @@
                 <el-col :span="12" :xs="24">
                     <el-form-item prop="account_name" label="开户名称">
                         <div class="u-m-b-4" style="line-height: 18px;">
-                            <p><el-text size="small" type="info">1、选择经营者个人银行卡时，开户名称必须与身份证姓名一致。</el-text></p>
-                            <p><el-text size="small" type="info">2、选择对公账户时，开户名称必须与营业执照上的“商户名称”一致。</el-text></p> 
+                            <p><el-text size="small" type="info">只能输入对公账户，开户名称必须与营业执照上的“公司名称(商户名称)”一致。</el-text></p> 
                         </div>
                         <el-input v-model="dynamicValidateForm.account_name" clearable />
                     </el-form-item>
@@ -356,7 +367,7 @@
 <script lang="ts" setup>
 import { dayjs } from 'element-plus'
 import locale from 'element-plus/dist/locale/zh-cn.mjs'
-import { reactive, ref, inject, onMounted, watch, toRefs } from 'vue'
+import { reactive, ref, inject, onMounted, watch, toRefs, readonly } from 'vue'
 import router from '@/router/guard'
 import { genFileId, ElMessage } from 'element-plus'
 import type { FormInstance, UploadFile, UploadRequestOptions, UploadRawFile, UploadProps, FormRules, TableColumnCtx } from 'element-plus'
@@ -386,7 +397,7 @@ const showBank = ref(false)
 const showBankSub = ref(false)
 const cityloading = ref(false)
 const $api: any = inject('$api')
-const mode = ref('')
+const mode = ref('add')
 const formRef = ref<FormInstance>()
 const dynamicValidateForm = reactive<{
     organization_type: string
@@ -435,6 +446,7 @@ const dynamicValidateForm = reactive<{
     store_name: '',
     merchant_shortname: '', 
 })
+const valid_time_radio = ref('0')
 const selectBank = ref({}) 
 const need_bank_branch = ref(false)
 const selectBankSub = ref({}) 
@@ -442,15 +454,16 @@ const bank_city_code = ref('')
 // const bank_city_list = ref([])
 const applyments_options_data = ref({})
 const imgEditPermission = computed(() => {
-    return true
+    return !formEditDisabled.value
 })
 const bank_address_code = computed(() => applyments_options_data.value.bank_address_code || [])
 const bank_address_code_arr = computed(() => { 
     return filterAddressData(bank_address_code.value) || []
 })
-const organization_type = computed(() => applyments_options_data.value.organization_type || [])
+const organization_type = computed(() => applyments_options_data.value.organization_type?.map(ele => ({...ele, id: String(ele.id)})) || [])
 // const provinces = computed(() => applyments_options_data.value.provinces || [])
  
+const formEditDisabled = computed(() => mode.value == 'readonly')
 const bankSubParams = computed(() => { 
     return {
         bank_alias_code: selectBank.value.bank_alias_code,
@@ -535,7 +548,7 @@ watch(
 watch(
     () => dynamicValidateForm.bank_address_code_arr,
     async (n) => { 
-        console.log(n)
+        // console.log(n)
         dynamicValidateForm.bank_address_code = n? n[n.length - 1] : ''
         // await getCity()
         
@@ -554,6 +567,16 @@ watch(
         // }
     },
     {deep: true}
+) 
+watch(
+    () => valid_time_radio.value,
+    async (n, o) => {  
+        if(n == '长期') {
+            dynamicValidateForm.id_card_valid_time = '长期'
+        } else {
+             dynamicValidateForm.id_card_valid_time = ''
+        }
+    } 
 ) 
 onMounted(async () => {
     await initData()
@@ -596,7 +619,7 @@ function setCurrentRow2({data = {}}) {
     selectBankSub.value = data 
 }
 function bankTableConfirm() {
-    dynamicValidateForm.account_bank = selectBank.value.bank_alias 
+    dynamicValidateForm.account_bank = selectBank.value.account_bank 
     need_bank_branch.value = selectBank.value.need_bank_branch == 1 ? true : false
     showBank.value = false
 }
@@ -609,10 +632,14 @@ async function initData() {
     init_loading.value = true
     await getApplymentsOptions()
     init_loading.value = false
-    if(mode.value == 'edit') {
+    if( mode.value != 'add' ) {
         await applyments.getApplymentsDetail()
+        await applyments.checkNeedBankBranch()
         initApplymentsDataToForm()
     } 
+    if(applyments_zt.value == 2) {
+        mode.value = 'readonly'
+    }
 }
 async function getApplymentsOptions() {
     const res = await $api.applyments_options();
@@ -635,15 +662,16 @@ async function initApplymentsDataToForm() {
     dynamicValidateForm.bank_address_code_arr = [Number(`${String(code).slice(0,2)}0000`), Number(`${String(code).slice(0,4)}00`), Number(code)]
     dynamicValidateForm.bank_branch_id = data.bank_branch_id
     dynamicValidateForm.bank_name = data.bank_name
-    dynamicValidateForm.business_license_copy = [{url: data.business_license_copy}]
+    if(data.business_license_copy) dynamicValidateForm.business_license_copy = [{url: data.business_license_copy}]
     dynamicValidateForm.business_license_number = data.business_license_number
-    dynamicValidateForm.id_card_copy = [{url: data.id_card_copy}]
-    dynamicValidateForm.id_card_national = [{url: data.id_card_national}]
+    if(data.id_card_copy) dynamicValidateForm.id_card_copy = [{url: data.id_card_copy}] 
+    if(data.id_card_national) dynamicValidateForm.id_card_national = [{url: data.id_card_national}]
     dynamicValidateForm.id_card_name = data.id_card_name
     dynamicValidateForm.id_card_number = data.id_card_number
+    if(data.id_card_valid_time == '长期') valid_time_radio.value = '长期'
     dynamicValidateForm.id_card_valid_time = data.id_card_valid_time
     dynamicValidateForm.id_card_valid_time_begin = data.id_card_valid_time_begin
-    dynamicValidateForm.id_card_valid_date = [new Date(data.id_card_valid_time_begin).getTime(), new Date(data.id_card_valid_time).getTime()]
+    // dynamicValidateForm.id_card_valid_date = [new Date(data.id_card_valid_time_begin).getTime(), new Date(data.id_card_valid_time).getTime()]
     dynamicValidateForm.legal_person = data.legal_person
     dynamicValidateForm.merchant_name = data.merchant_name
     dynamicValidateForm.merchant_shortname = data.merchant_shortname

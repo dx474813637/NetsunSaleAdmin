@@ -1,7 +1,7 @@
 <template>
     <el-table 
         v-loading="loading" 
-        :data="addressList" 
+        :data="dataList" 
         style="width: 100%"  
         :maxHeight="maxHeight"
         :highlight-current-row="isRadioGroup"
@@ -20,50 +20,27 @@
                 
             </template>
         </el-table-column>
-        <el-table-column label="用户UID" width="120" align="center" >
-            <template #default="{row}">
-                <div>{{ row.login }}</div> 
-            </template>
-        </el-table-column>  
-        <el-table-column label="联系人" >
-            <template #default="{row}">
-                <div class="u-flex">
-                    <div>{{ row.name }}</div>
-                    <el-text tag="b" type="danger" class="u-m-l-10" v-if="row.auto == 1" >默认</el-text> 
-                </div>
-                <div>{{ row.tel }}</div>
+        <el-table-column label="内容" >
+            <template #default="{row}"> 
+                <div>{{ row.bank_memo }}</div>  
             </template>
         </el-table-column>
-        <el-table-column label="自提点" >
-            <template #default="{row}">
-                <div>{{ row.address_name }}</div> 
+        <el-table-column label="金额" >
+            <template #default="{row}">  
+                <div class="u-flex u-flex-items-end"> 
+                    <el-statistic class="u-m-r-5 u-m-l-5 u-m-b-2 " value-style="font-size: 13px; " :value="row.amount/100" precision="2" />
+                    <el-text class="u-m-r-5">元</el-text>
+                </div>   
             </template>
-        </el-table-column>  
-        <el-table-column label="详细地址" >
-            <template #default="{row}">
-                <div>{{ row.area_name }}</div>
-                <div>{{ row.address }}</div>
+        </el-table-column> 
+        <el-table-column label="状态" >
+            <template #default="{row}"> 
+                <div>{{ row.status }}</div>  
             </template>
-        </el-table-column>  
-        <el-table-column label="创建时间" >
+        </el-table-column> 
+        <el-table-column label="时间" >
             <template #default="{row}">
                 <div>{{ row.ctime }}</div> 
-            </template>
-        </el-table-column>  
-        <el-table-column label="操作" >
-            <template #default="{row, $index}">
-                <el-button   
-                    type="primary" 
-                    size="small"  
-                    plain
-                    @click="adminBtn(row)"
-                >管理</el-button>  
-                <el-button   
-                    type="primary" 
-                    size="small"  
-                    plain
-                    @click="adminSendBtn(row)"
-                >发货记录</el-button>  
             </template>
         </el-table-column>  
         <template #empty>
@@ -91,7 +68,6 @@ import { reactive,ref,computed, inject, onMounted } from 'vue'
 import router from "@/router/guard" 
 import { deepClone } from '@/utils';
 import useProductSku from '@/hook/useProductSku'
-import { genFileId,ElNotification, ElMessage } from 'element-plus'
 const {
     sku2treeData
 } = useProductSku()
@@ -113,10 +89,10 @@ const props = defineProps({
         default: () => ({})
     },
 });
-const emit = defineEmits(["setCurrentRow", "admin", "adminSend"]);
+const emit = defineEmits(["setCurrentRow"]);
 const currentRow = ref()
 const $api = inject('$api')
-const addressList = ref([])
+const dataList = ref([])
 const loading = ref(false)
 const curP = ref(1)
 const total = ref(0)
@@ -132,14 +108,19 @@ const defaultProps = {
 }
 onMounted(async () => {
     loading.value = true; 
-    await getData()
+    try {
+        await getData()
+    } catch (error) {
+        
+    }
+    
     loading.value = false;
 
 })
 
 const getData = async () => { 
-    const res = await $api.adress_list1({params: paramsObj.value, loading: false}) 
-    addressList.value = res.list 
+    const res = await $api.fund_withdraw_list({params: paramsObj.value, loading: false}) 
+    dataList.value = res.list
     total.value = +res.total 
 }
  
@@ -156,13 +137,6 @@ const handleCurrentTableChange = (val, oldVal) => {
     currentRow.value = val
     emit('setCurrentRow', {val, oldVal})
 }
-async function adminBtn(data) { 
-    emit('admin', data)
-}
-
-async function adminSendBtn(data) { 
-    emit('adminSend', data)
-}
 
 </script>
 <style lang='scss' scoped>
@@ -171,29 +145,4 @@ async function adminSendBtn(data) {
 .el-tree {
     background-color: transparent;
 }
-.table-box {
-    ::v-deep {
-        .el-upload--picture-card { 
-            --el-upload-picture-card-size: 55px;
-        }
-        .el-upload-list--picture-card .el-upload-list__item {
-            --el-upload-list-picture-card-size: 55px;
-        }
-        .el-upload-list--picture-card .el-upload-list__item-actions span+span {
-            margin-left: 8px
-        }
-            
-        .limit {
-            .el-upload--picture-card {
-                display: none;
-            }
-            .el-upload-list--picture-card {
-                display: flex;
-            }
-            .el-upload-list--picture-card .el-upload-list__item {
-                margin: 0
-            }
-        }
-    }
-} 
 </style>

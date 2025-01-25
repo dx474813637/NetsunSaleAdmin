@@ -35,10 +35,19 @@ const routes = [
                 path: 'applyments',
                 name: 'applyments',
                 meta: {
-                    title: '商户申请',  
+                    title: '账户信息',  
                     role: [1, 2, 3], 
                 },
                 component: () => import('@/views/index/applyments/applyments.vue'),
+            },
+            {
+                path: 'applyments_index',
+                name: 'applyments_index',
+                meta: {
+                    title: '支付账户',  
+                    role: [1, 2, 3], 
+                },
+                component: () => import('@/views/index/applyments_index/applyments_index.vue'),
             },
             {
                 path: 'bond_list',
@@ -310,6 +319,16 @@ const routes = [
                 component: () => import('@/views/index/community_goods_list/community_goods_list.vue'),
             }, 
             {
+                path: 'community_refund_list',
+                name: 'community_refund_list',
+                meta: {
+                    title: '退货记录', 
+                    role: [1, 2, 3],
+                    community: true,
+                },
+                component: () => import('@/views/index/community_refund_list/community_refund_list.vue'),
+            }, 
+            {
                 path: 'community_list',
                 name: 'community_list',
                 meta: {
@@ -497,6 +516,15 @@ const routes = [
                     role: [2],
                 }, 
                 component: () => import('@/views/operate/om_product_list/om_product_list.vue'),
+            },
+            {
+                path: 'settlement',
+                name: 'settlement', 
+                meta: {
+                    title: '结算系统',  
+                    role: [2],
+                }, 
+                component: () => import('@/views/operate/settlement/settlement.vue'),
             },
         ]
     },

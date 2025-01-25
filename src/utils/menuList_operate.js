@@ -50,6 +50,15 @@
 				"route": {
 					"name": "om_product_list"
 				}
+			},
+			{
+				"label": "结算系统", 
+				"icon": "",
+				"index": "settlement", 
+				"role": "[ 2 ]",
+				"route": {
+					"name": "settlement"
+				}
 			}
 		]
 	}

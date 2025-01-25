@@ -199,3 +199,14 @@ export const adress_list1 = (data) => axios.get('Userapi/adress_list1', data)
 export const order_list2 = (data) => axios.get('Userapi/order_list2', data)
 // community_change_status 社区团购发货 参数idarr=发货清单列表里返回的idarr。
 export const community_change_status = (data) => axios.get('Userapi/community_change_status', data)
+// order_community_refund 社区团购退货记录 参数p
+export const order_community_refund = (data) => axios.get('Userapi/order_community_refund', data)
+
+// operator_settlement 运营商商家结算页
+export const operator_settlement = (data) => axios.get('Userapi/operator_settlement', data)
+// operator_settlement1 运营商团长结算页
+export const operator_settlement1 = (data) => axios.get('Userapi/operator_settlement1', data)
+// operator_settlement_list 运营商提现记录
+export const operator_settlement_list = (data) => axios.get('Userapi/operator_settlement_list', data)
+// operator_settlement_edit 上传发票 参数id img
+export const operator_settlement_edit = (data, config) => axios.post('Userapi/operator_settlement_edit', data, config)  
